@@ -1,0 +1,47 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Keep this list identical to window.ALLOWED_EMAILS in public/firebase-config.js.
+    function isFamilyMember() {
+      return request.auth != null &&
+        request.auth.token.email in [
+          'nishb85@gmail.com',
+          'sannish16@gmail.com',
+          '16marinaclose@gmail.com',
+          'hazeldia7@gmail.com',
+          'leescu.paul@gmail.com',
+          'leescu.paul@googlemail.com'
+        ];
+    }
+
+    // Finance data (debts/payments) is restricted to Nish and Sangeetha only —
+    // keep identical to FINANCE_EMAILS in public/app.js.
+    function isFinanceMember() {
+      return request.auth != null &&
+        request.auth.token.email in [
+          'nishb85@gmail.com',
+          'sannish16@gmail.com'
+        ];
+    }
+
+    match /families/main/debts/{docId} {
+      allow read, write: if isFinanceMember();
+    }
+    match /families/main/payments/{docId} {
+      allow read, write: if isFinanceMember();
+    }
+
+    // All other collections under families/main (members, tasks, events, grocery,
+    // shopping) stay open to every family member. Explicitly excludes debts/payments
+    // so the tighter rules above are the ones that actually apply to them.
+    match /families/main/{collectionId}/{docId} {
+      allow read, write: if isFamilyMember() && collectionId != 'debts' && collectionId != 'payments';
+    }
+
+    // Everything else is locked down by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
