@@ -2,7 +2,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Keep this list identical to window.ALLOWED_EMAILS in public/firebase-config.js.
+    // Keep this list identical to VITE_ALLOWED_EMAILS in .env.
     function isFamilyMember() {
       return request.auth != null &&
         request.auth.token.email in [
@@ -16,7 +16,7 @@ service cloud.firestore {
     }
 
     // Finance data (debts/payments) is restricted to Nish and Sangeetha only —
-    // keep identical to FINANCE_EMAILS in public/app.js.
+    // keep identical to VITE_FINANCE_EMAILS in .env.
     function isFinanceMember() {
       return request.auth != null &&
         request.auth.token.email in [

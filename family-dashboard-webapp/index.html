@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Close Knit</title>
+</head>
+<body>
+
+<!-- ================= SIGN-IN OVERLAY ================= -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-card">
+    <h1><span class="wordmark on-light"><span class="w-close">Close</span> <span class="w-knit">Knit</span></span></h1>
+    <p>Sign in with your family Google account to view and manage tasks, the calendar, and shopping lists.</p>
+    <button class="g-btn" id="googleSignInBtn">
+      <svg class="g-icon" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.9 32.4 29.4 35.5 24 35.5 16.5 35.5 10.5 29.5 10.5 22S16.5 8.5 24 8.5c3.6 0 6.9 1.4 9.4 3.6l5.7-5.7C35.5 3 30 1 24 1 11.8 1 2 10.8 2 22s9.8 21 22 21 22-9.8 22-21c0-1.5-.2-2.9-.4-4.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 15.6 18.9 12.5 24 12.5c3.6 0 6.9 1.4 9.4 3.6l5.7-5.7C35.5 7 30 5 24 5c-7.5 0-14 4.2-17.7 10.5z"/><path fill="#4CAF50" d="M24 43c5.3 0 10.1-1.8 13.8-5l-6.4-5.3c-2 1.4-4.6 2.3-7.4 2.3-5.3 0-9.8-3.4-11.4-8.1l-6.6 5.1C9.9 38.9 16.4 43 24 43z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-1.1 3-3.3 5.4-6.1 7l6.4 5.3C39.5 37.1 44 31.1 44 22c0-1.5-.2-2.9-.4-4.5z"/></svg>
+      Sign in with Google
+    </button>
+    <div class="auth-divider">or</div>
+    <button type="button" class="email-toggle" id="emailToggleBtn">Sign in with email &amp; password</button>
+    <form class="email-signin-form" id="emailSignInForm">
+      <div class="field">
+        <label for="signInEmail">Email</label>
+        <input type="text" id="signInEmail" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="signInPassword">Password</label>
+        <input type="password" id="signInPassword" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn primary" id="emailSignInBtn">Sign in</button>
+    </form>
+    <div class="auth-error" id="authError"></div>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div id="appRoot">
+
+<header>
+  <div>
+    <h1><span class="wordmark"><span class="w-close">Close</span> <span class="w-knit">Knit</span></span></h1>
+    <div class="sub" id="todayLabel"></div>
+  </div>
+  <div class="header-actions">
+    <button class="btn" id="exportBtn">Export data</button>
+    <button class="btn" id="importBtn">Import data</button>
+    <input type="file" id="importFile" accept="application/json">
+    <div class="user-badge">
+      <img class="user-photo" id="userPhoto" src="" alt="">
+      <span class="user-name" id="userName"></span>
+      <button class="btn small" id="signOutBtn">Sign out</button>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button data-view="overview" class="active">Overview</button>
+  <button data-view="calendar">Calendar</button>
+  <button data-view="tasks">Tasks</button>
+  <button data-view="grocery">Grocery</button>
+  <button data-view="shopping">Shopping List</button>
+  <button data-view="wishlist">Wish List</button>
+  <button data-view="finance">Finance</button>
+  <button data-view="holiday">Holidays</button>
+  <button data-view="members">Family Members</button>
+</nav>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section class="view active" id="view-overview">
+    <div class="grid" id="statGrid"></div>
+
+    <div class="card">
+      <h2>Due today &amp; overdue</h2>
+      <ul class="task-list" id="overviewTaskList"></ul>
+    </div>
+
+    <div class="card">
+      <div class="cal-head">
+        <button class="btn small" id="prevMonthOv">&larr;</button>
+        <div class="month-label" id="monthLabelOv"></div>
+        <button class="btn small" id="nextMonthOv">&rarr;</button>
+      </div>
+      <div class="cal-grid" id="calGridOv"></div>
+    </div>
+
+    <div class="card">
+      <h2>Next 7 days on the calendar</h2>
+      <ul class="task-list" id="overviewEventList"></ul>
+    </div>
+  </section>
+
+  <!-- TASKS -->
+  <section class="view" id="view-tasks">
+    <div class="card">
+      <h2>Add a task</h2>
+      <div class="row">
+        <div class="field" style="flex:2; min-width:180px;">
+          <label>Task</label>
+          <input type="text" id="taskTitle" placeholder="e.g. Take bins out">
+        </div>
+        <div class="field">
+          <label>Assign to</label>
+          <select id="taskAssignee"></select>
+        </div>
+        <div class="field">
+          <label>Due date</label>
+          <input type="date" id="taskDue">
+        </div>
+        <div class="field" style="align-self:flex-end;">
+          <button class="btn primary" id="addTaskBtn">Add task</button>
+        </div>
+      </div>
+      <div class="field" style="margin-top:10px;">
+        <label>Notes (optional)</label>
+        <textarea id="taskNotes" placeholder="Any extra detail..."></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row" style="justify-content:space-between; margin-bottom:6px;">
+        <h2 style="margin:0;">All tasks</h2>
+        <select class="filter" id="taskFilter">
+          <option value="all">Everyone</option>
+        </select>
+      </div>
+      <div id="taskStatusBanner" style="display:none; align-items:center; gap:8px; font-size:0.85rem; color:var(--ink-soft); margin-bottom:8px;"></div>
+      <ul class="task-list" id="taskList"></ul>
+    </div>
+  </section>
+
+  <!-- CALENDAR -->
+  <section class="view" id="view-calendar">
+    <div class="card">
+      <div class="cal-head">
+        <button class="btn small" id="prevMonth">&larr;</button>
+        <div class="month-label" id="monthLabel"></div>
+        <button class="btn small" id="nextMonth">&rarr;</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+  </section>
+
+  <!-- GROCERY -->
+  <section class="view" id="view-grocery">
+    <div class="card">
+      <h2>Add a grocery item</h2>
+      <div class="row">
+        <div class="field" style="flex:2; min-width:160px;">
+          <label>Item</label>
+          <input type="text" id="groceryText" placeholder="e.g. Milk">
+        </div>
+        <div class="field">
+          <label>Quantity <small style="font-weight:400;">(optional)</small></label>
+          <input type="text" id="groceryQty" placeholder="e.g. 2 pints" style="max-width:130px;">
+        </div>
+        <div class="field">
+          <label>Category</label>
+          <select id="groceryCategory">
+            <option>Fruit &amp; Veg</option>
+            <option>Dairy &amp; Eggs</option>
+            <option>Meat &amp; Fish</option>
+            <option>Bakery</option>
+            <option>Frozen</option>
+            <option>Pantry &amp; Tins</option>
+            <option>Household</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field" style="align-self:flex-end;">
+          <button class="btn primary" id="addGroceryBtn">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row" style="justify-content:space-between; margin-bottom:6px;">
+        <h2 style="margin:0;">Grocery list</h2>
+        <button class="btn small" id="clearGroceryBtn">Clear checked</button>
+      </div>
+      <div id="groceryListWrap"></div>
+    </div>
+  </section>
+
+  <!-- SHOPPING LIST -->
+  <section class="view" id="view-shopping">
+    <div class="card">
+      <h2>Add a shopping item <small>non-food purchases</small></h2>
+      <div class="row">
+        <div class="field" style="flex:2; min-width:160px;">
+          <label>Item</label>
+          <input type="text" id="shoppingText" placeholder="e.g. New school shoes for Hazel">
+        </div>
+        <div class="field">
+          <label>Who's getting it <small style="font-weight:400;">(optional)</small></label>
+          <select id="shoppingAssignee"><option value="">Anyone</option></select>
+        </div>
+        <div class="field" style="align-self:flex-end;">
+          <button class="btn primary" id="addShoppingBtn">Add</button>
+        </div>
+      </div>
+      <div class="field" style="margin-top:10px;">
+        <label>Notes <small style="font-weight:400;">(optional — shop, size, link, etc.)</small></label>
+        <input type="text" id="shoppingNotes" placeholder="e.g. Argos, size 3">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row" style="justify-content:space-between; margin-bottom:6px;">
+        <h2 style="margin:0;">Shopping list</h2>
+        <button class="btn small" id="clearShoppingBtn">Clear checked</button>
+      </div>
+      <ul class="todo-list" id="shoppingList"></ul>
+    </div>
+  </section>
+
+  <!-- MEMBERS -->
+  <section class="view" id="view-members">
+    <div class="card">
+      <h2>Add a family member</h2>
+      <div class="row">
+        <input type="text" id="memberName" placeholder="Name">
+        <button class="btn primary" id="addMemberBtn">Add member</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Family members</h2>
+      <div id="memberListWrap"></div>
+    </div>
+  </section>
+
+  <!-- FINANCE -->
+  <section class="view" id="view-finance">
+    <div class="card">
+      <h2>Add a debt / balance</h2>
+      <div class="row">
+        <div class="field">
+          <label>Whose account</label>
+          <select id="debtMember"></select>
+        </div>
+        <div class="field" style="flex:1; min-width:160px;">
+          <label>Creditor / account</label>
+          <input type="text" id="debtCreditor" placeholder="e.g. Barclays">
+        </div>
+        <div class="field">
+          <label>Balance (&pound;)</label>
+          <input type="number" id="debtBalance" step="0.01" min="0" placeholder="0.00">
+        </div>
+        <div class="field" style="flex:1; min-width:180px;">
+          <label>Note <small style="font-weight:400;">(optional — e.g. rate/term)</small></label>
+          <input type="text" id="debtNote" placeholder="e.g. 0% until 01/07/2027">
+        </div>
+        <div class="field" style="align-self:flex-end;">
+          <button class="btn primary" id="addDebtBtn">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Log a payment</h2>
+      <div class="row">
+        <div class="field">
+          <label>Whose account</label>
+          <select id="paymentMember"></select>
+        </div>
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="paymentDate">
+        </div>
+        <div class="field">
+          <label>Payment (&pound;)</label>
+          <input type="number" id="paymentAmount" step="0.01" min="0" placeholder="0.00">
+        </div>
+        <div class="field">
+          <label>Method</label>
+          <select id="paymentMethod">
+            <option>Bank Transfer</option>
+            <option>Cash</option>
+            <option>Card</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field" style="flex:1; min-width:160px;">
+          <label>Comment <small style="font-weight:400;">(optional)</small></label>
+          <input type="text" id="paymentComment" placeholder="e.g. part payment">
+        </div>
+        <div class="field" style="align-self:flex-end; display:flex; gap:8px;">
+          <button class="btn primary" id="addPaymentBtn">Log payment</button>
+          <button class="btn small" id="cancelPaymentEditBtn" style="display:none;">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Finance overview</h2>
+      <div id="financeWrap"></div>
+    </div>
+  </section>
+
+  <!-- HOLIDAYS -->
+  <section class="view" id="view-holiday">
+    <div class="card">
+      <h2>Plan a holiday</h2>
+      <div class="row">
+        <div class="field">
+          <label>Start date</label>
+          <input type="date" id="holidayStart">
+        </div>
+        <div class="field">
+          <label>End date</label>
+          <input type="date" id="holidayEnd">
+        </div>
+        <div class="field" style="flex:1; min-width:160px;">
+          <label>Destination</label>
+          <input type="text" id="holidayDestination" placeholder="e.g. Dubai">
+        </div>
+        <div class="field" style="flex:1; min-width:150px;">
+          <label>Airline <small style="font-weight:400;">(optional)</small></label>
+          <input type="text" id="holidayAirline" placeholder="e.g. Emirates">
+        </div>
+        <div class="field" style="flex:1; min-width:170px;">
+          <label>Flight booking reference <small style="font-weight:400;">(optional)</small></label>
+          <input type="text" id="holidayBookingRef" placeholder="e.g. XK7P2Q">
+        </div>
+        <div class="field" style="min-width:150px;">
+          <label>Status</label>
+          <select id="holidayStatus">
+            <option value="Planning">Planning</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Booked">Booked</option>
+            <option value="Pending Payment">Pending Payment</option>
+          </select>
+        </div>
+        <div class="field" style="flex:1; min-width:220px;">
+          <label>Who's going <small style="font-weight:400;">(optional — tap to select, none = whole family)</small></label>
+          <div class="chip-picker" id="holidayMemberPicker"></div>
+        </div>
+        <div class="field" style="align-self:flex-end; display:flex; gap:8px;">
+          <button class="btn primary" id="addHolidayBtn">Add holiday</button>
+          <button class="btn small" id="cancelHolidayEditBtn" style="display:none;">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Holidays</h2>
+      <ul class="task-list" id="holidayList"></ul>
+    </div>
+  </section>
+
+  <!-- WISH LIST -->
+  <section class="view" id="view-wishlist">
+    <div class="card">
+      <h2>Add a wish</h2>
+      <div class="row">
+        <div class="field">
+          <label>Who's adding it</label>
+          <select id="wishMember"></select>
+        </div>
+        <div class="field" style="flex:1; min-width:200px;">
+          <label>Item</label>
+          <input type="text" id="wishItem" placeholder="e.g. Noise-cancelling headphones">
+        </div>
+        <div class="field" style="flex:1; min-width:200px;">
+          <label>Item link <small style="font-weight:400;">(optional)</small></label>
+          <input type="url" id="wishLink" placeholder="https://...">
+        </div>
+        <div class="field" style="flex:1; min-width:200px;">
+          <label>Notes <small style="font-weight:400;">(optional — shop, size, etc.)</small></label>
+          <input type="text" id="wishNotes" placeholder="e.g. John Lewis, size 8">
+        </div>
+        <div class="field" style="align-self:flex-end; display:flex; gap:8px;">
+          <button class="btn primary" id="addWishBtn">Add wish</button>
+          <button class="btn small" id="cancelWishEditBtn" style="display:none;">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Wish List</h2>
+      <ul class="task-list" id="wishListEl"></ul>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Signed in with Google — only accounts on the family allow-list can see this data. Changes sync live to everyone signed in. <strong>Export data</strong> saves a JSON backup; <strong>Import data</strong> replaces the shared data for the whole family, so use it carefully.
+</footer>
+
+<!-- Event modal -->
+<dialog id="eventDialog">
+  <div class="modal-head">
+    <h3 id="eventDialogDate">Add event</h3>
+    <button class="close-x" id="closeEventDialog">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="field">
+      <label>Event title</label>
+      <input type="text" id="eventTitle" placeholder="e.g. School play">
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>Time (optional)</label>
+        <input type="time" id="eventTime">
+      </div>
+      <div class="field">
+        <label>Who's it for</label>
+        <select id="eventMember"></select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>Ends <small style="font-weight:400;">(optional — for multi-day events like trips)</small></label>
+        <input type="date" id="eventEndDate">
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>Repeats</label>
+        <select id="eventRepeat">
+          <option value="none">Doesn't repeat</option>
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="fortnightly">Fortnightly</option>
+          <option value="monthly">Monthly</option>
+          <option value="yearly">Yearly</option>
+        </select>
+      </div>
+      <div class="field" id="eventRepeatUntilWrap" style="display:none;">
+        <label>Until <small style="font-weight:400;">(optional)</small></label>
+        <input type="date" id="eventRepeatUntil">
+      </div>
+    </div>
+    <div id="existingEvents"></div>
+  </div>
+  <div class="modal-foot">
+    <button class="btn" id="closeEventDialog2">Close</button>
+    <button class="btn primary" id="saveEventBtn">Save event</button>
+  </div>
+</dialog>
+
+</div><!-- /appRoot -->
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
