@@ -183,45 +183,140 @@ header .btn:hover{background:rgba(255,255,255,0.28);}
 .email-signin-form input{width:100%; box-sizing:border-box;}
 .email-signin-form button{width:100%;}
 
+/* ============ Nav + layout — mobile-first ============
+   Phone (<768px): nav.tabs is a fixed bottom bar, app-icon style, like a
+   native app tab bar. Only the 4 most-used sections get a slot; the rest
+   live behind the "More" sheet (tab-more button + moreNavDialog).
+   Tablet/desktop (>=768px): nav.tabs becomes a sticky left sidebar showing
+   every section directly, and the "More" button/sheet are unused. */
+.app-body{
+  display:flex;
+  flex-direction:column;
+}
+
 nav.tabs{
   display:flex;
-  gap:4px;
-  padding:0 28px;
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:50;
+  gap:0;
+  padding:4px 2px calc(4px + env(safe-area-inset-bottom));
   background:var(--card);
-  border-bottom:1px solid var(--line);
-  overflow-x:auto;
+  border-top:1px solid var(--line);
+  box-shadow:0 -2px 14px rgba(20,20,30,0.08);
 }
 nav.tabs button{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  min-height:52px;
   background:none;
   border:none;
-  padding:14px 16px;
-  font-size:0.9rem;
+  border-radius:10px;
+  padding:6px 2px;
+  font-size:0.66rem;
   font-weight:600;
   color:var(--ink-soft);
   cursor:pointer;
-  border-bottom:3px solid transparent;
-  white-space:nowrap;
-  border-radius:8px 8px 0 0;
 }
+nav.tabs .tab-icon{font-size:1.3rem; line-height:1;}
+nav.tabs .tab-label{max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 nav.tabs button:hover{background:var(--accent-soft);}
-nav.tabs button.active{color:var(--accent); border-bottom-color:var(--accent);}
-nav.tabs button[data-view="overview"].active{color:var(--c-overview); border-bottom-color:var(--c-overview); background:color-mix(in srgb, var(--c-overview) 8%, transparent);}
-nav.tabs button[data-view="tasks"].active{color:var(--c-tasks); border-bottom-color:var(--c-tasks); background:color-mix(in srgb, var(--c-tasks) 8%, transparent);}
-nav.tabs button[data-view="calendar"].active{color:var(--c-calendar); border-bottom-color:var(--c-calendar); background:color-mix(in srgb, var(--c-calendar) 8%, transparent);}
-nav.tabs button[data-view="grocery"].active{color:var(--c-grocery); border-bottom-color:var(--c-grocery); background:color-mix(in srgb, var(--c-grocery) 8%, transparent);}
-nav.tabs button[data-view="shopping"].active{color:var(--c-shopping); border-bottom-color:var(--c-shopping); background:color-mix(in srgb, var(--c-shopping) 8%, transparent);}
-nav.tabs button[data-view="members"].active{color:var(--c-members); border-bottom-color:var(--c-members); background:color-mix(in srgb, var(--c-members) 8%, transparent);}
-nav.tabs button[data-view="finance"].active{color:var(--c-finance); border-bottom-color:var(--c-finance); background:color-mix(in srgb, var(--c-finance) 8%, transparent);}
-nav.tabs button[data-view="holiday"].active{color:var(--c-holiday); border-bottom-color:var(--c-holiday); background:color-mix(in srgb, var(--c-holiday) 8%, transparent);}
-nav.tabs button[data-view="wishlist"].active{color:var(--c-wishlist); border-bottom-color:var(--c-wishlist); background:color-mix(in srgb, var(--c-wishlist) 8%, transparent);}
+nav.tabs button.tab-secondary{display:none;} /* reachable via the "More" sheet on mobile */
+nav.tabs button.active{color:var(--accent);}
+nav.tabs button.tab-more.active{color:var(--accent);}
+nav.tabs button[data-view="overview"].active{color:var(--c-overview);}
+nav.tabs button[data-view="tasks"].active{color:var(--c-tasks);}
+nav.tabs button[data-view="calendar"].active{color:var(--c-calendar);}
+nav.tabs button[data-view="grocery"].active{color:var(--c-grocery);}
+nav.tabs button[data-view="shopping"].active{color:var(--c-shopping);}
+nav.tabs button[data-view="members"].active{color:var(--c-members);}
+nav.tabs button[data-view="finance"].active{color:var(--c-finance);}
+nav.tabs button[data-view="holiday"].active{color:var(--c-holiday);}
+nav.tabs button[data-view="wishlist"].active{color:var(--c-wishlist);}
+
+.more-nav-list{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:10px;
+}
+.more-nav-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  padding:14px 6px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--card);
+  color:var(--ink);
+  font-size:0.78rem;
+  font-weight:600;
+  cursor:pointer;
+}
+.more-nav-item:hover{background:var(--accent-soft);}
+.more-nav-item .tab-icon{font-size:1.4rem;}
 
 main{
-  padding:24px 28px 60px;
-  max-width:1200px;
-  margin:0 auto;
+  padding:20px 16px calc(78px + env(safe-area-inset-bottom));
 }
 .view{display:none;}
 .view.active{display:block;}
+
+/* Tablet and desktop: sidebar nav instead of a bottom bar. */
+@media (min-width:768px){
+  .app-body{
+    flex-direction:row;
+    align-items:flex-start;
+  }
+  nav.tabs{
+    position:sticky;
+    top:0;
+    left:auto;
+    right:auto;
+    bottom:auto;
+    flex-direction:column;
+    align-items:stretch;
+    width:220px;
+    flex-shrink:0;
+    max-height:100vh;
+    overflow-y:auto;
+    gap:2px;
+    padding:20px 12px;
+    border-top:none;
+    border-right:1px solid var(--line);
+    box-shadow:none;
+  }
+  nav.tabs button.tab-secondary{display:flex;}
+  nav.tabs button.tab-more{display:none;}
+  nav.tabs button{
+    flex-direction:row;
+    justify-content:flex-start;
+    gap:10px;
+    min-height:0;
+    padding:11px 14px;
+    font-size:0.9rem;
+    border-radius:8px;
+    border-left:3px solid transparent;
+  }
+  nav.tabs .tab-icon{font-size:1.05rem;}
+  nav.tabs button.active{
+    border-left-color:currentColor;
+    background:color-mix(in srgb, currentColor 8%, transparent);
+  }
+  main{
+    flex:1;
+    min-width:0;
+    max-width:1200px;
+    margin:0;
+    padding:24px 28px 60px;
+  }
+}
 
 .grid{
   display:grid;
@@ -374,7 +469,7 @@ select.filter{max-width:180px;}
 @media (max-width:480px){
   .cal-cell{padding:3px; font-size:0.62rem; min-height:60px;}
   .cal-event{padding:1px 3px; font-size:0.56rem;}
-  main{padding:16px 12px 40px;}
+  main{padding:16px 12px calc(78px + env(safe-area-inset-bottom));}
   .card{padding:14px;}
   .user-badge .user-name{display:none;}
   .grid{grid-template-columns:repeat(2, 1fr);}

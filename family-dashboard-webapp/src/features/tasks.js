@@ -1,5 +1,5 @@
 import { state, memberById } from "../state/store.js";
-import { addItem, updateItem, deleteItem, serverTimestamp } from "../firebase/collections.js";
+import { addItem, updateItem, deleteItem, serverTimestamp } from "../supabase/collections.js";
 import { todayStr, fmtDateNice } from "../utils/dates.js";
 import { escapeHtml, initials } from "../utils/format.js";
 

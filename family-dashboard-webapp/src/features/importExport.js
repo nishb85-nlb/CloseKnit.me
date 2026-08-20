@@ -1,6 +1,6 @@
 import { state } from "../state/store.js";
 import { session } from "../state/session.js";
-import { deleteAllItems, newBatch, docRef, newDocRef } from "../firebase/collections.js";
+import { deleteAllItems, newBatch, docRef, newDocRef } from "../supabase/collections.js";
 import { todayStr } from "../utils/dates.js";
 
 export function initImportExport() {
@@ -48,6 +48,11 @@ export function initImportExport() {
           const batch = newBatch();
           items.forEach(item => {
             const { id, ...rest } = item;
+            // Supabase's bulk upsert fills any key missing from a row with SQL
+            // NULL rather than the column's default, so a not-null column with
+            // a default (events.repeat) needs the default applied explicitly
+            // for older exports that never had this field.
+            if (name === 'events' && rest.repeat === undefined) rest.repeat = 'none';
             const ref = id ? docRef(name, id) : newDocRef(name);
             batch.set(ref, rest);
           });

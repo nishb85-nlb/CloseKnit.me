@@ -6,12 +6,23 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "firebase": "^10.12.2"
+    "preview": "vite preview",
+    "cap:sync": "npm run build && cap sync",
+    "android:open": "cap open android",
+    "android:run": "npm run cap:sync && cap run android",
+    "ios:open": "cap open ios",
+    "ios:run": "npm run cap:sync && cap run ios"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.0",
     "vite": "^5.4.0"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/browser": "^8.0.4",
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/ios": "^8.5.0",
+    "@supabase/supabase-js": "^2.112.3"
   }
 }

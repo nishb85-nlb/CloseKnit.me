@@ -1,5 +1,5 @@
 import { state } from "../state/store.js";
-import { addItem, updateItem, deleteItem, serverTimestamp } from "../firebase/collections.js";
+import { addItem, updateItem, deleteItem, serverTimestamp } from "../supabase/collections.js";
 import { escapeHtml } from "../utils/format.js";
 
 const GROCERY_CATEGORY_ORDER = ["Fruit & Veg", "Dairy & Eggs", "Meat & Fish", "Bakery", "Frozen", "Pantry & Tins", "Household", "Other"];

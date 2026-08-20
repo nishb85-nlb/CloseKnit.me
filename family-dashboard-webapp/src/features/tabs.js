@@ -9,9 +9,41 @@ export function goToTab(view) {
   if (btn) btn.classList.add('active');
   const viewEl = document.getElementById('view-' + view);
   if (viewEl) viewEl.classList.add('active');
+
+  // On mobile, sections behind the "More" sheet don't get their own bottom-bar
+  // slot — light up the More button instead so something is always highlighted.
+  const moreBtn = document.getElementById('navMoreBtn');
+  if (moreBtn) moreBtn.classList.toggle('active', !!(btn && btn.classList.contains('tab-secondary')));
+
   if (view === 'overview') renderOverview();
   if (view === 'calendar') renderCalendar();
   if (view === 'tasks') { resetTaskStatusFilter(); renderTasks(); }
+}
+
+// Populates the "More" sheet from the nav's own tab-secondary buttons, so
+// there's one source of truth for which sections exist and their labels.
+function initMoreSheet() {
+  const moreBtn = document.getElementById('navMoreBtn');
+  const dialog = document.getElementById('moreNavDialog');
+  const list = document.getElementById('moreNavList');
+  const closeBtn = document.getElementById('closeMoreNavDialog');
+  if (!moreBtn || !dialog || !list || !closeBtn) return;
+
+  document.querySelectorAll('nav.tabs button.tab-secondary').forEach(srcBtn => {
+    const view = srcBtn.dataset.view;
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.className = 'more-nav-item';
+    item.innerHTML = srcBtn.innerHTML;
+    item.addEventListener('click', () => {
+      dialog.close();
+      goToTab(view);
+    });
+    list.appendChild(item);
+  });
+
+  moreBtn.addEventListener('click', () => dialog.showModal());
+  closeBtn.addEventListener('click', () => dialog.close());
 }
 
 function handleStatAction(action) {
@@ -27,9 +59,10 @@ function handleStatAction(action) {
 }
 
 export function initTabs() {
-  document.querySelectorAll('nav.tabs button').forEach(btn => {
+  document.querySelectorAll('nav.tabs button:not(.tab-more)').forEach(btn => {
     btn.addEventListener('click', () => goToTab(btn.dataset.view));
   });
+  initMoreSheet();
 
   document.getElementById('statGrid').addEventListener('click', e => {
     const tile = e.target.closest('.stat');

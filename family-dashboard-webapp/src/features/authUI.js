@@ -1,5 +1,5 @@
 import { signInWithGoogle, signInWithEmail, signOutUser, watchAuthState } from "../auth/authService.js";
-import { startSync, stopSync } from "../firebase/sync.js";
+import { startSync, stopSync } from "../supabase/sync.js";
 import { resetState } from "../state/store.js";
 import { session } from "../state/session.js";
 import { ALLOWED_EMAILS, FINANCE_EMAILS } from "../config/env.js";
@@ -12,12 +12,13 @@ export function initAuthUI() {
 
   document.getElementById('googleSignInBtn').addEventListener('click', async () => {
     authError.classList.remove('show');
-    try {
-      await signInWithGoogle();
-    } catch (err) {
-      authError.textContent = 'Sign-in failed: ' + err.message;
+    const { error } = await signInWithGoogle();
+    if (error) {
+      authError.textContent = 'Sign-in failed: ' + error.message;
       authError.classList.add('show');
     }
+    // On success the browser is redirected to Google and back — nothing
+    // further to do here, watchAuthState() below picks up the new session.
   });
 
   document.getElementById('emailToggleBtn').addEventListener('click', () => {
@@ -29,10 +30,9 @@ export function initAuthUI() {
     authError.classList.remove('show');
     const email = document.getElementById('signInEmail').value.trim();
     const password = document.getElementById('signInPassword').value;
-    try {
-      await signInWithEmail(email, password);
-    } catch (err) {
-      authError.textContent = 'Sign-in failed: ' + err.message;
+    const { error } = await signInWithEmail(email, password);
+    if (error) {
+      authError.textContent = 'Sign-in failed: ' + error.message;
       authError.classList.add('show');
     }
   });
@@ -51,8 +51,9 @@ export function initAuthUI() {
     if (user) {
       authOverlay.style.display = 'none';
       appRoot.style.display = 'block';
-      document.getElementById('userPhoto').src = user.photoURL || '';
-      document.getElementById('userName').textContent = user.displayName || user.email;
+      const meta = user.user_metadata || {};
+      document.getElementById('userPhoto').src = meta.avatar_url || meta.picture || '';
+      document.getElementById('userName').textContent = meta.full_name || meta.name || user.email;
       session.canSeeFinance = FINANCE_EMAILS.includes(user.email);
       const financeTabBtn = document.querySelector('nav.tabs button[data-view="finance"]');
       if (financeTabBtn) financeTabBtn.style.display = session.canSeeFinance ? '' : 'none';

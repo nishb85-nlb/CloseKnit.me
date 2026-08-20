@@ -53,16 +53,19 @@
   </div>
 </header>
 
+<div class="app-body">
+
 <nav class="tabs">
-  <button data-view="overview" class="active">Overview</button>
-  <button data-view="calendar">Calendar</button>
-  <button data-view="tasks">Tasks</button>
-  <button data-view="grocery">Grocery</button>
-  <button data-view="shopping">Shopping List</button>
-  <button data-view="wishlist">Wish List</button>
-  <button data-view="finance">Finance</button>
-  <button data-view="holiday">Holidays</button>
-  <button data-view="members">Family Members</button>
+  <button data-view="overview" class="active tab-primary"><span class="tab-icon">🏠</span><span class="tab-label">Overview</span></button>
+  <button data-view="calendar" class="tab-primary"><span class="tab-icon">📅</span><span class="tab-label">Calendar</span></button>
+  <button data-view="tasks" class="tab-primary"><span class="tab-icon">📋</span><span class="tab-label">Tasks</span></button>
+  <button data-view="grocery" class="tab-primary"><span class="tab-icon">🛒</span><span class="tab-label">Grocery</span></button>
+  <button data-view="shopping" class="tab-secondary"><span class="tab-icon">🛍️</span><span class="tab-label">Shopping List</span></button>
+  <button data-view="wishlist" class="tab-secondary"><span class="tab-icon">🎁</span><span class="tab-label">Wish List</span></button>
+  <button data-view="finance" class="tab-secondary"><span class="tab-icon">💰</span><span class="tab-label">Finance</span></button>
+  <button data-view="holiday" class="tab-secondary"><span class="tab-icon">✈️</span><span class="tab-label">Holidays</span></button>
+  <button data-view="members" class="tab-secondary"><span class="tab-icon">👪</span><span class="tab-label">Family Members</span></button>
+  <button type="button" class="tab-more" id="navMoreBtn"><span class="tab-icon">⋯</span><span class="tab-label">More</span></button>
 </nav>
 
 <main>
@@ -385,9 +388,20 @@
 
 </main>
 
+</div><!-- /app-body -->
+
 <footer>
   Signed in with Google — only accounts on the family allow-list can see this data. Changes sync live to everyone signed in. <strong>Export data</strong> saves a JSON backup; <strong>Import data</strong> replaces the shared data for the whole family, so use it carefully.
 </footer>
+
+<!-- "More" nav sheet — mobile only, lists the tabs that don't fit the bottom bar -->
+<dialog id="moreNavDialog">
+  <div class="modal-head">
+    <h3>More</h3>
+    <button class="close-x" id="closeMoreNavDialog">✕</button>
+  </div>
+  <div class="modal-body more-nav-list" id="moreNavList"></div>
+</dialog>
 
 <!-- Event modal -->
 <dialog id="eventDialog">

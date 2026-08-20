@@ -1,5 +1,5 @@
 import { state } from "../state/store.js";
-import { addItem, updateItem, deleteItem } from "../firebase/collections.js";
+import { addItem, updateItem, deleteItem } from "../supabase/collections.js";
 import { escapeHtml, initials } from "../utils/format.js";
 import { PALETTE } from "../config/env.js";
 import { renderHolidayMemberPicker } from "./holidays.js";

@@ -5,6 +5,7 @@ import "./styles/main.css";
 import { subscribe } from "./state/store.js";
 
 import { initAuthUI } from "./features/authUI.js";
+import { initNativeAuthListener } from "./auth/authService.js";
 import { initTabs } from "./features/tabs.js";
 import { initMembers, renderMembers } from "./features/members.js";
 import { initTasks, renderTasks } from "./features/tasks.js";
@@ -34,6 +35,7 @@ function renderAll() {
 subscribe(renderAll);
 
 initAuthUI();
+initNativeAuthListener();
 initTabs();
 initMembers();
 initTasks();
