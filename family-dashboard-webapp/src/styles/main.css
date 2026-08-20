@@ -1,5 +1,5 @@
 :root{
-  --bg:#f4f5fb;
+  --bg:#eef3fc;
   --card:#ffffff;
   --ink:#1f2430;
   --ink-soft:#5b6270;
@@ -57,6 +57,12 @@ header h1{
   display:block;
   height:60px;
   width:auto;
+}
+/* Header sits on a dark gradient — recolour the logo to a clean white
+   silhouette there instead of its native navy/teal, so it stays legible.
+   The sign-in card keeps the logo's original colours (white background). */
+header .logo-img{
+  filter:brightness(0) invert(1);
 }
 header .sub{
   color:rgba(255,255,255,0.85);
