@@ -237,6 +237,7 @@ nav.tabs button{
   cursor:pointer;
 }
 nav.tabs .tab-icon{font-size:1.3rem; line-height:1;}
+nav.tabs .tab-icon svg, .more-nav-item .tab-icon svg{width:1em; height:1em; display:block;}
 nav.tabs .tab-label{max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 nav.tabs button:hover{background:var(--accent-soft);}
 nav.tabs button.tab-secondary{display:none;} /* reachable via the "More" sheet on mobile */
@@ -311,16 +312,19 @@ main{
     justify-content:flex-start;
     gap:10px;
     min-height:0;
-    padding:11px 14px;
-    font-size:0.9rem;
+    padding:10px 14px;
+    font-size:0.87rem;
+    font-weight:500;
     border-radius:8px;
     border-left:3px solid transparent;
   }
-  nav.tabs .tab-icon{font-size:1.05rem;}
+  nav.tabs .tab-icon{font-size:1.05rem; opacity:0.85;}
   nav.tabs button.active{
+    font-weight:600;
     border-left-color:currentColor;
     background:color-mix(in srgb, currentColor 8%, transparent);
   }
+  nav.tabs button.active .tab-icon{opacity:1;}
   main{
     flex:1;
     min-width:0;
