@@ -53,6 +53,11 @@ header h1{
   gap:10px;
   color:#fff;
 }
+.logo-img{
+  display:block;
+  height:60px;
+  width:auto;
+}
 header .sub{
   color:rgba(255,255,255,0.85);
   font-size:0.85rem;
@@ -125,6 +130,7 @@ header .btn:hover{background:rgba(255,255,255,0.28);}
   box-shadow:0 20px 60px rgba(0,0,0,0.3);
 }
 .auth-card h1{margin:0 0 6px; font-size:1.4rem; display:flex; align-items:center; justify-content:center; gap:10px;}
+.auth-card .logo-img{height:auto; width:100%; max-width:240px; margin:0 auto;}
 .wordmark{font-weight:800;}
 .wordmark .w-close{color:#ffffff;}
 .wordmark .w-knit{color:#0b0b0f;}
