@@ -320,7 +320,8 @@ main{
 
 .grid{
   display:grid;
-  grid-template-columns:repeat(6, 1fr);
+  grid-auto-flow:column;
+  grid-auto-columns:1fr;
   gap:10px;
   margin-bottom:22px;
 }
@@ -345,7 +346,7 @@ main{
 .stat .num{font-size:1.35rem; font-weight:700; line-height:1;}
 .stat .label{color:var(--ink-soft); font-size:0.74rem; margin-top:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 @media (max-width:900px){
-  .grid{grid-template-columns:repeat(3, 1fr);}
+  .grid{grid-auto-flow:row; grid-template-columns:repeat(3, 1fr);}
 }
 .stat.stat-tasks{--stat-color:var(--c-tasks);}
 .stat.stat-overdue{--stat-color:var(--bad);}
@@ -472,7 +473,7 @@ select.filter{max-width:180px;}
   main{padding:16px 12px calc(78px + env(safe-area-inset-bottom));}
   .card{padding:14px;}
   .user-badge .user-name{display:none;}
-  .grid{grid-template-columns:repeat(2, 1fr);}
+  .grid{grid-auto-flow:row; grid-template-columns:repeat(2, 1fr);}
 }
 .cal-cell:hover{background:#f3ebfb;}
 .cal-cell.other-month{opacity:0.35;}
