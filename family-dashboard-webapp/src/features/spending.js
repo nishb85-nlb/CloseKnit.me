@@ -17,16 +17,30 @@ const CATEGORIES = [
   { key: 'Other', color: '#9aa4b2' },
 ];
 
-// Item — the type of purchase.
-const ITEMS = [
+// Item — the type of purchase. A few raw dropdown values share one chart
+// bucket (the cleaning/pet services below all count as "Services" here) —
+// keeps the chart's colour count at the dataviz skill's 7-8 ceiling while
+// the dropdown and the expense list still show exactly which service it was.
+const ITEM_BUCKETS = [
   { key: 'Grocery', color: '#2a9d8f' },
   { key: 'Household Bill', color: '#4361ee' },
   { key: 'Entertainment', color: '#d6336c' },
   { key: 'Travel', color: '#c9971b' },
   { key: 'School', color: '#7209b7' },
   { key: 'Renovation', color: '#2b9348' },
+  { key: 'Services', color: '#118ab2' },
   { key: 'Other', color: '#9aa4b2' },
 ];
+
+const ITEM_TO_BUCKET = {
+  'House Cleaner': 'Services',
+  'Window Cleaner': 'Services',
+  'Pet Sitter': 'Services',
+};
+
+function itemBucketOf(item) {
+  return ITEM_TO_BUCKET[item] || item;
+}
 
 let spendCursor = new Date();
 spendCursor.setDate(1);
@@ -67,12 +81,13 @@ function itemsForMonth(year, month) {
 
 // Fixed order every time for both — this is identity (which bucket), not a
 // ranking, so it stays put rather than reshuffling as amounts change.
-function bucketRows(items, buckets, field) {
+function bucketRows(items, buckets, field, mapper = (v) => v) {
   const totals = {};
   buckets.forEach(b => { totals[b.key] = 0; });
   items.forEach(e => {
-    if (totals[e[field]] === undefined) totals[e[field]] = 0;
-    totals[e[field]] += Number(e.amount) || 0;
+    const key = mapper(e[field]);
+    if (totals[key] === undefined) totals[key] = 0;
+    totals[key] += Number(e.amount) || 0;
   });
   return buckets.map(b => ({ label: b.key, amount: totals[b.key] || 0, color: b.color }));
 }
@@ -153,7 +168,7 @@ function renderSpendingTab() {
   if (totalEl) totalEl.textContent = fmtMoney(total);
 
   renderBarChart('spendCategoryChart', bucketRows(items, CATEGORIES, 'category'));
-  renderBarChart('spendItemChart', bucketRows(items, ITEMS, 'item'));
+  renderBarChart('spendItemChart', bucketRows(items, ITEM_BUCKETS, 'item', itemBucketOf));
 
   const personEl = document.getElementById('spendPersonChart');
   if (personEl) {
