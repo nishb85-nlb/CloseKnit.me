@@ -27,6 +27,11 @@ export function startSync() {
     setCollection('debts', []);
     setCollection('payments', []);
   }
+  if (session.canSeeExpenses) {
+    watch('expenses');
+  } else {
+    setCollection('expenses', []);
+  }
   if (!seedChecked) {
     seedChecked = true;
     seedIfEmpty();

@@ -4,7 +4,7 @@ import { escapeHtml, initials } from "../utils/format.js";
 import { PALETTE } from "../config/env.js";
 import { renderHolidayMemberPicker } from "./holidays.js";
 
-const MEMBER_SELECT_IDS = ['taskAssignee', 'eventMember', 'shoppingAssignee', 'debtMember', 'paymentMember', 'wishMember'];
+const MEMBER_SELECT_IDS = ['taskAssignee', 'eventMember', 'shoppingAssignee', 'debtMember', 'paymentMember', 'wishMember', 'expenseMember'];
 
 function renderMemberSelects() {
   MEMBER_SELECT_IDS.forEach(id => {
@@ -12,7 +12,8 @@ function renderMemberSelects() {
     if (!sel) return;
     const cur = sel.value;
     sel.innerHTML = (sel.id === 'eventMember') ? '<option value="">Whole family</option>'
-      : (sel.id === 'shoppingAssignee') ? '<option value="">Anyone</option>' : '';
+      : (sel.id === 'shoppingAssignee') ? '<option value="">Anyone</option>'
+      : (sel.id === 'expenseMember') ? '<option value="">Shared</option>' : '';
     state.members.forEach(m => {
       const opt = document.createElement('option');
       opt.value = m.id; opt.textContent = m.name;

@@ -1,7 +1,6 @@
 import { state, memberById } from "../state/store.js";
-import { session } from "../state/session.js";
 import { todayStr, fmtDateNice } from "../utils/dates.js";
-import { escapeHtml, initials, fmtMoney } from "../utils/format.js";
+import { escapeHtml, initials } from "../utils/format.js";
 import { renderTaskList } from "./tasks.js";
 
 export function renderOverview() {
@@ -20,11 +19,6 @@ export function renderOverview() {
       return endD >= start && d <= end;
     }).sort((a, b) => a.date.localeCompare(b.date) || (a.time || '').localeCompare(b.time || ''));
   })();
-  const totalOwed = state.members.reduce((sum, m) => {
-    const debtTotal = state.debts.filter(d => d.memberId === m.id).reduce((s, d) => s + (Number(d.balance) || 0), 0);
-    const paidTotal = state.payments.filter(p => p.memberId === m.id).reduce((s, p) => s + (Number(p.amount) || 0), 0);
-    return sum + Math.max(debtTotal - paidTotal, 0);
-  }, 0);
   const nextHoliday = (() => {
     const todayISO = todayStr();
     const upcoming = state.holidays.filter(h => {
@@ -52,7 +46,6 @@ export function renderOverview() {
     <div class="stat stat-grocery" data-action="tab:grocery" tabindex="0" role="button" aria-label="Go to grocery list"><div class="stat-top"><span class="icon">🛒</span><span class="num">${groceryOpen.length}</span></div><div class="label">Grocery left</div></div>
     <div class="stat stat-shopping" data-action="tab:shopping" tabindex="0" role="button" aria-label="Go to shopping list"><div class="stat-top"><span class="icon">🛍️</span><span class="num">${shoppingOpen.length}</span></div><div class="label">Shopping left</div></div>
     <div class="stat stat-members" data-action="tab:members" tabindex="0" role="button" aria-label="Go to family members"><div class="stat-top"><span class="icon">👪</span><span class="num">${state.members.length}</span></div><div class="label">Family members</div></div>
-    ${(session.canSeeFinance && state.debts.length) ? `<div class="stat stat-finance" data-action="tab:finance" tabindex="0" role="button" aria-label="Go to finance"><div class="stat-top"><span class="icon">💰</span><span class="num" style="font-size:1.05rem;">${fmtMoney(totalOwed)}</span></div><div class="label">Total owed</div></div>` : ''}
     ${nextHoliday ? `<div class="stat stat-holiday" data-action="tab:holiday" tabindex="0" role="button" aria-label="Go to holidays"><div class="stat-top"><span class="icon">✈️</span><span class="num" style="font-size:${holidayIsAway ? '1.05rem' : '1.2rem'};">${holidayNum}</span></div><div class="label">${escapeHtml(nextHoliday.destination)}</div></div>` : ''}
   `;
 

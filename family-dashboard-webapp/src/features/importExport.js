@@ -36,9 +36,12 @@ export function initImportExport() {
         const collections = { members: data.members, tasks: data.tasks, events: data.events, grocery: data.grocery || [], shopping: data.shopping || [], holidays: data.holidays || [], wishlist: data.wishlist || [] };
         if (session.canSeeFinance) {
           // Only imported for Nish/Sangeetha — importing as anyone else would hit a
-          // Firestore permissions error on these two collections and abort the whole import.
+          // Supabase RLS rejection on these two collections and abort the whole import.
           collections.debts = data.debts || [];
           collections.payments = data.payments || [];
+        }
+        if (session.canSeeExpenses) {
+          collections.expenses = data.expenses || [];
         }
         for (const name of Object.keys(collections)) {
           await deleteAllItems(name);

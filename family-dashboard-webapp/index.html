@@ -66,6 +66,7 @@
   <button data-view="shopping" class="tab-secondary"><span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 8V6.2a4.5 4.5 0 0 1 9 0V8"/><rect x="4.5" y="8" width="15" height="12" rx="2"/></svg></span><span class="tab-label">Shopping List</span></button>
   <button data-view="wishlist" class="tab-secondary"><span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M4 13.5h16M12 10v10"/><path d="M12 10c-1.5 0-3.3-.6-3.3-2.4A1.9 1.9 0 0 1 10.5 5.8c1.6 0 1.5 2.4 1.5 4.2ZM12 10c1.5 0 3.3-.6 3.3-2.4A1.9 1.9 0 0 0 13.5 5.8c-1.6 0-1.5 2.4-1.5 4.2Z"/></svg></span><span class="tab-label">Wish List</span></button>
   <button data-view="finance" class="tab-secondary"><span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="6.5" width="17" height="12" rx="2.2"/><path d="M3.5 10.3h17"/><circle cx="16.7" cy="14.3" r="1" fill="currentColor" stroke="none"/></svg></span><span class="tab-label">Finance</span></button>
+  <button data-view="spending" class="tab-secondary"><span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V11M11 20V6.5M18 20v-7"/><path d="M3.5 20.5h17"/></svg></span><span class="tab-label">Spending</span></button>
   <button data-view="holiday" class="tab-secondary"><span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 3.5 3.5 10.7l6.5 2.3 2.3 6.5Z"/><path d="M12.4 13 20.5 3.5"/></svg></span><span class="tab-label">Holidays</span></button>
   <button data-view="members" class="tab-secondary"><span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3.7 19.3c.7-3.3 2.9-4.8 5.3-4.8s4.6 1.5 5.3 4.8"/><circle cx="17" cy="9.2" r="2.3"/><path d="M15.2 19.3c.4-2.5 1.7-3.9 3.4-4.2"/></svg></span><span class="tab-label">Family Members</span></button>
   <button type="button" class="tab-more" id="navMoreBtn"><span class="tab-icon"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="18" cy="12" r="1.4" fill="currentColor"/></svg></span><span class="tab-label">More</span></button>
@@ -76,6 +77,14 @@
   <!-- OVERVIEW -->
   <section class="view active" id="view-overview">
     <div class="grid" id="statGrid"></div>
+
+    <div class="card" id="overviewSpendCard" style="display:none;">
+      <div class="spend-card-head">
+        <h2 style="margin:0;">This month's spending</h2>
+        <span class="spend-total" id="overviewSpendTotal">&pound;0.00</span>
+      </div>
+      <div id="overviewSpendChart"></div>
+    </div>
 
     <div class="card">
       <h2>Due today &amp; overdue</h2>
@@ -301,6 +310,61 @@
     <div class="card">
       <h2>Finance overview</h2>
       <div id="financeWrap"></div>
+    </div>
+  </section>
+
+  <!-- SPENDING -->
+  <section class="view" id="view-spending">
+    <div class="card">
+      <h2>Log spending</h2>
+      <div class="row">
+        <div class="field">
+          <label>Category</label>
+          <select id="expenseCategory">
+            <option>Grocery</option>
+            <option>Household</option>
+            <option>Entertainment</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Amount (&pound;)</label>
+          <input type="number" id="expenseAmount" step="0.01" min="0" placeholder="0.00">
+        </div>
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="expenseDate">
+        </div>
+        <div class="field">
+          <label>Who</label>
+          <select id="expenseMember"></select>
+        </div>
+        <div class="field" style="flex:1; min-width:160px;">
+          <label>Note <small style="font-weight:400;">(optional)</small></label>
+          <input type="text" id="expenseNote" placeholder="e.g. Big weekly shop">
+        </div>
+        <div class="field" style="align-self:flex-end;">
+          <button class="btn primary" id="addExpenseBtn">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="cal-head">
+        <button class="btn small" id="prevSpendMonth">&larr;</button>
+        <div class="month-label" id="spendMonthLabel"></div>
+        <button class="btn small" id="nextSpendMonth">&rarr;</button>
+      </div>
+      <div class="spend-card-head">
+        <h2 style="margin:0;">Spending by category</h2>
+        <span class="spend-total" id="spendMonthTotal">&pound;0.00</span>
+      </div>
+      <div id="spendChart"></div>
+    </div>
+
+    <div class="card">
+      <h2>This month's spending</h2>
+      <ul class="task-list" id="spendList"></ul>
     </div>
   </section>
 

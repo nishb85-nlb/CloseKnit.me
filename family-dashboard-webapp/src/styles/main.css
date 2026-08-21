@@ -21,6 +21,7 @@
   --c-finance:#c9971b;
   --c-holiday:#f3722c;
   --c-wishlist:#d6336c;
+  --c-spending:#a0522d;
 }
 *{box-sizing:border-box;}
 body{
@@ -281,6 +282,7 @@ nav.tabs button[data-view="members"].active{color:var(--c-members);}
 nav.tabs button[data-view="finance"].active{color:var(--c-finance);}
 nav.tabs button[data-view="holiday"].active{color:var(--c-holiday);}
 nav.tabs button[data-view="wishlist"].active{color:var(--c-wishlist);}
+nav.tabs button[data-view="spending"].active{color:var(--c-spending);}
 
 .more-nav-list{
   display:grid;
@@ -421,6 +423,7 @@ main{
 #view-finance .card{--section-color:var(--c-finance);}
 #view-holiday .card{--section-color:var(--c-holiday);}
 #view-wishlist .card{--section-color:var(--c-wishlist);}
+#view-spending .card{--section-color:var(--c-spending);}
 .card h2{
   margin:0 0 14px;
   font-size:1.05rem;
@@ -571,6 +574,25 @@ select.filter{max-width:180px;}
 .fin-pos{color:var(--good);}
 .fin-total-line{font-weight:700; font-size:0.95rem; padding-top:10px; margin-top:4px; border-top:2px solid var(--line);}
 .fin-running{color:var(--ink-soft); font-size:0.78rem; min-width:78px; text-align:right;}
+
+.spend-card-head{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:14px;}
+.spend-total{font-size:1.1rem; font-weight:700; color:var(--ink);}
+.spend-bar-row{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+.spend-bar-row:last-child{margin-bottom:0;}
+.spend-bar-label{width:100px; flex-shrink:0; font-size:0.82rem; color:var(--ink-soft); font-weight:600;}
+.spend-bar-track{
+  flex:1;
+  height:18px;
+  background:var(--line);
+  border-radius:0 4px 4px 0;
+  overflow:hidden;
+}
+.spend-bar-fill{
+  height:100%;
+  border-radius:0 4px 4px 0;
+  transition:width 0.2s ease;
+}
+.spend-bar-value{width:64px; flex-shrink:0; text-align:right; font-size:0.85rem; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums;}
 
 .chip-picker{display:flex; flex-wrap:wrap; gap:6px; max-width:280px;}
 .chip-toggle{

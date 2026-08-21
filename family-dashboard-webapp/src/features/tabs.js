@@ -22,14 +22,22 @@ export function goToTab(view) {
 
 // Populates the "More" sheet from the nav's own tab-secondary buttons, so
 // there's one source of truth for which sections exist and their labels.
-function initMoreSheet() {
-  const moreBtn = document.getElementById('navMoreBtn');
+// Rebuilt fresh every time the sheet opens (not once at init) — some
+// secondary tabs (Finance, Spending) are hidden per-user based on auth
+// state that isn't known yet when the app first loads, so the list has to
+// reflect whichever buttons are actually visible *now*.
+function populateMoreSheet() {
   const dialog = document.getElementById('moreNavDialog');
   const list = document.getElementById('moreNavList');
-  const closeBtn = document.getElementById('closeMoreNavDialog');
-  if (!moreBtn || !dialog || !list || !closeBtn) return;
+  if (!dialog || !list) return;
 
+  list.innerHTML = '';
   document.querySelectorAll('nav.tabs button.tab-secondary').forEach(srcBtn => {
+    // Secondary tabs are always display:none on mobile via CSS (that's what
+    // routes them through this sheet in the first place) — auth-gating
+    // (authUI.js) hides a tab by setting its *inline* style instead, so
+    // that's the one we check here rather than the computed style.
+    if (srcBtn.style.display === 'none') return;
     const view = srcBtn.dataset.view;
     const item = document.createElement('button');
     item.type = 'button';
@@ -41,8 +49,18 @@ function initMoreSheet() {
     });
     list.appendChild(item);
   });
+}
 
-  moreBtn.addEventListener('click', () => dialog.showModal());
+function initMoreSheet() {
+  const moreBtn = document.getElementById('navMoreBtn');
+  const dialog = document.getElementById('moreNavDialog');
+  const closeBtn = document.getElementById('closeMoreNavDialog');
+  if (!moreBtn || !dialog || !closeBtn) return;
+
+  moreBtn.addEventListener('click', () => {
+    populateMoreSheet();
+    dialog.showModal();
+  });
   closeBtn.addEventListener('click', () => dialog.close());
 }
 

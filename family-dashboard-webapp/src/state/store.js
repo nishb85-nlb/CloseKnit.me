@@ -2,7 +2,7 @@
 // whenever any collection changes, without importing each other directly.
 const EMPTY_STATE = {
   members: [], tasks: [], events: [], grocery: [], shopping: [],
-  debts: [], payments: [], holidays: [], wishlist: []
+  debts: [], payments: [], holidays: [], wishlist: [], expenses: []
 };
 
 export const state = { ...EMPTY_STATE };

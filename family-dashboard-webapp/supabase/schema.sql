@@ -93,3 +93,13 @@ create table wishlist (
   notes text,
   created_at timestamptz not null default now()
 );
+
+create table expenses (
+  id text primary key default gen_random_uuid()::text,
+  category text not null,
+  amount numeric(10,2) not null,
+  date date not null,
+  member_id text references members(id) on delete set null,
+  note text,
+  created_at timestamptz not null default now()
+);

@@ -2,9 +2,10 @@ import { signInWithGoogle, signInWithEmail, signOutUser, watchAuthState } from "
 import { startSync, stopSync } from "../supabase/sync.js";
 import { resetState } from "../state/store.js";
 import { session } from "../state/session.js";
-import { ALLOWED_EMAILS, FINANCE_EMAILS } from "../config/env.js";
+import { ALLOWED_EMAILS, FINANCE_EMAILS, EXPENSE_EMAILS } from "../config/env.js";
 import { goToTab } from "./tabs.js";
 import { renderWeather } from "./weather.js";
+import { renderSpending } from "./spending.js";
 
 export function initAuthUI() {
   const authOverlay = document.getElementById('authOverlay');
@@ -63,13 +64,22 @@ export function initAuthUI() {
         const financeView = document.getElementById('view-finance');
         if (financeView && financeView.classList.contains('active')) goToTab('overview');
       }
+      session.canSeeExpenses = EXPENSE_EMAILS.includes(user.email);
+      const spendingTabBtn = document.querySelector('nav.tabs button[data-view="spending"]');
+      if (spendingTabBtn) spendingTabBtn.style.display = session.canSeeExpenses ? '' : 'none';
+      if (!session.canSeeExpenses) {
+        const spendingView = document.getElementById('view-spending');
+        if (spendingView && spendingView.classList.contains('active')) goToTab('overview');
+      }
       startSync();
       renderWeather();
+      renderSpending();
     } else {
       authOverlay.style.display = 'flex';
       appRoot.style.display = 'none';
       stopSync();
       session.canSeeFinance = false;
+      session.canSeeExpenses = false;
       resetState();
     }
   });
