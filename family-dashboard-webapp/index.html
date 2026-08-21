@@ -336,7 +336,7 @@
           <input type="date" id="expenseDate">
         </div>
         <div class="field">
-          <label>Who</label>
+          <label>Who's it for <small style="font-weight:400;">(optional — leave as Shared for general household spend)</small></label>
           <select id="expenseMember"></select>
         </div>
         <div class="field" style="flex:1; min-width:160px;">
@@ -365,6 +365,11 @@
     <div class="card">
       <h2>This month's spending</h2>
       <ul class="task-list" id="spendList"></ul>
+    </div>
+
+    <div class="card">
+      <h2>Spending by person <small>what was spent on who this month</small></h2>
+      <div id="spendPersonChart"></div>
     </div>
   </section>
 

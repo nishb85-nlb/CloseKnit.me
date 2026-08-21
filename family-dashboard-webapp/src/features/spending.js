@@ -22,35 +22,50 @@ function monthKeyOf(dateStr) {
   return dateStr ? dateStr.slice(0, 7) : '';
 }
 
-function categoryTotals(items) {
+function categoryRows(items) {
   const totals = {};
   CATEGORIES.forEach(c => { totals[c.key] = 0; });
   items.forEach(e => {
     if (totals[e.category] === undefined) totals[e.category] = 0;
     totals[e.category] += Number(e.amount) || 0;
   });
-  return totals;
+  // Fixed category order every time — this is identity (which bucket), not
+  // a ranking, so it stays put rather than reshuffling as amounts change.
+  return CATEGORIES.map(c => ({ label: c.key, amount: totals[c.key] || 0, color: c.color }));
 }
 
-// Shared bar-chart renderer — used for both the full Spending tab (any
-// month, via spendCursor) and the compact read-only card on Overview
-// (always the current month). One bar per category, direct-labelled at
-// the tip; no legend needed since each bar already carries its own label.
-function renderChartInto(containerId, items) {
+// Who spent what this month, using each member's own existing colour
+// (already used for their avatar/chips elsewhere) so the person and the
+// bar are visually the same thing everywhere in the app. Unlike categories
+// this genuinely is a magnitude ranking ("who spent the most"), so it's
+// sorted descending rather than held to a fixed order.
+function personRows(items) {
+  const totals = {};
+  let sharedAmount = 0;
+  items.forEach(e => {
+    if (e.memberId) totals[e.memberId] = (totals[e.memberId] || 0) + (Number(e.amount) || 0);
+    else sharedAmount += Number(e.amount) || 0;
+  });
+  const rows = state.members.map(m => ({ label: m.name, amount: totals[m.id] || 0, color: m.color }));
+  if (sharedAmount > 0) rows.push({ label: 'Shared', amount: sharedAmount, color: '#9aa4b2' });
+  return rows.sort((a, b) => b.amount - a.amount);
+}
+
+// Shared bar-chart renderer — one bar per row, direct-labelled at the tip;
+// no legend needed since each bar already carries its own label.
+function renderBarChart(containerId, rows) {
   const el = document.getElementById(containerId);
   if (!el) return;
-  const totals = categoryTotals(items);
-  const max = Math.max(1, ...CATEGORIES.map(c => totals[c.key] || 0));
-  el.innerHTML = CATEGORIES.map(c => {
-    const amt = totals[c.key] || 0;
-    const pct = Math.round((amt / max) * 100);
+  const max = Math.max(1, ...rows.map(r => r.amount));
+  el.innerHTML = rows.map(r => {
+    const pct = Math.round((r.amount / max) * 100);
     return `
       <div class="spend-bar-row">
-        <div class="spend-bar-label">${escapeHtml(c.key)}</div>
+        <div class="spend-bar-label">${escapeHtml(r.label)}</div>
         <div class="spend-bar-track">
-          <div class="spend-bar-fill" style="width:${pct}%; background:${c.color};"></div>
+          <div class="spend-bar-fill" style="width:${pct}%; background:${r.color};"></div>
         </div>
-        <div class="spend-bar-value">${fmtMoney(amt)}</div>
+        <div class="spend-bar-value">${fmtMoney(r.amount)}</div>
       </div>
     `;
   }).join('');
@@ -70,7 +85,7 @@ function renderOverviewCard() {
   const totalEl = document.getElementById('overviewSpendTotal');
   if (totalEl) totalEl.textContent = fmtMoney(total);
 
-  renderChartInto('overviewSpendChart', items);
+  renderBarChart('overviewSpendChart', categoryRows(items));
 }
 
 function renderSpendingTab() {
@@ -84,7 +99,16 @@ function renderSpendingTab() {
   const totalEl = document.getElementById('spendMonthTotal');
   if (totalEl) totalEl.textContent = fmtMoney(total);
 
-  renderChartInto('spendChart', items);
+  renderBarChart('spendChart', categoryRows(items));
+
+  const personEl = document.getElementById('spendPersonChart');
+  if (personEl) {
+    const rows = personRows(items);
+    personEl.innerHTML = rows.length
+      ? ''
+      : '<div class="empty">Add a family member to see a per-person breakdown.</div>';
+    if (rows.length) renderBarChart('spendPersonChart', rows);
+  }
 
   const listEl = document.getElementById('spendList');
   if (!listEl) return;
