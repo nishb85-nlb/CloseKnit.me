@@ -24,6 +24,7 @@ const ITEMS = [
   { key: 'Entertainment', color: '#d6336c' },
   { key: 'Travel', color: '#c9971b' },
   { key: 'School', color: '#7209b7' },
+  { key: 'Renovation', color: '#2b9348' },
   { key: 'Other', color: '#9aa4b2' },
 ];
 
