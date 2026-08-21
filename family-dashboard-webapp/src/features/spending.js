@@ -4,19 +4,24 @@ import { addItem, deleteItem, serverTimestamp } from "../supabase/collections.js
 import { todayStr, fmtDateNice } from "../utils/dates.js";
 import { escapeHtml, initials, fmtMoney } from "../utils/format.js";
 
-// Categorical colours validated with the dataviz skill's six-check palette
-// validator (fixed hue order — never cycled). "Other" is deliberately a
-// de-emphasis neutral, not a validated hue, matching the "fold the tail
-// into Other" guidance for a small fixed category set. Hazel/Rolo sit
-// alongside the spend-type categories rather than under the separate
-// "Paid by" field, since spend "on" a specific person/pet is its own
-// category here, distinct from who paid for it.
+// Two independent breakdowns per expense, each with its own colour set
+// (both validated with the dataviz skill's six-check palette validator —
+// fixed hue order, never cycled). "Other" is always a de-emphasis neutral,
+// not a validated hue, per the "fold the tail into Other" guidance.
+
+// Category — who/what the spend is for.
 const CATEGORIES = [
-  { key: 'Grocery', color: '#2a9d8f' },
-  { key: 'Household', color: '#4361ee' },
-  { key: 'Entertainment', color: '#d6336c' },
-  { key: 'Hazel', color: '#f3722c' },
+  { key: 'Household', color: '#c9971b' },
+  { key: 'Hazel', color: '#e63946' },
   { key: 'Rolo', color: '#7209b7' },
+  { key: 'Other', color: '#9aa4b2' },
+];
+
+// Item — the type of purchase.
+const ITEMS = [
+  { key: 'Grocery', color: '#2a9d8f' },
+  { key: 'Household Bill', color: '#4361ee' },
+  { key: 'Entertainment', color: '#d6336c' },
   { key: 'Other', color: '#9aa4b2' },
 ];
 
@@ -27,16 +32,16 @@ function monthKeyOf(dateStr) {
   return dateStr ? dateStr.slice(0, 7) : '';
 }
 
-function categoryRows(items) {
+// Fixed order every time for both — this is identity (which bucket), not a
+// ranking, so it stays put rather than reshuffling as amounts change.
+function bucketRows(items, buckets, field) {
   const totals = {};
-  CATEGORIES.forEach(c => { totals[c.key] = 0; });
+  buckets.forEach(b => { totals[b.key] = 0; });
   items.forEach(e => {
-    if (totals[e.category] === undefined) totals[e.category] = 0;
-    totals[e.category] += Number(e.amount) || 0;
+    if (totals[e[field]] === undefined) totals[e[field]] = 0;
+    totals[e[field]] += Number(e.amount) || 0;
   });
-  // Fixed category order every time — this is identity (which bucket), not
-  // a ranking, so it stays put rather than reshuffling as amounts change.
-  return CATEGORIES.map(c => ({ label: c.key, amount: totals[c.key] || 0, color: c.color }));
+  return buckets.map(b => ({ label: b.key, amount: totals[b.key] || 0, color: b.color }));
 }
 
 // Who paid this month (the expenseMember field is "Paid by"), using each
@@ -91,7 +96,9 @@ function renderOverviewCard() {
   const totalEl = document.getElementById('overviewSpendTotal');
   if (totalEl) totalEl.textContent = fmtMoney(total);
 
-  renderBarChart('overviewSpendChart', categoryRows(items));
+  // The dashboard glance leads with Category (who/what it's for) since
+  // that's the dimension this household cares about seeing at a glance.
+  renderBarChart('overviewSpendChart', bucketRows(items, CATEGORIES, 'category'));
 }
 
 function renderSpendingTab() {
@@ -105,7 +112,8 @@ function renderSpendingTab() {
   const totalEl = document.getElementById('spendMonthTotal');
   if (totalEl) totalEl.textContent = fmtMoney(total);
 
-  renderBarChart('spendChart', categoryRows(items));
+  renderBarChart('spendCategoryChart', bucketRows(items, CATEGORIES, 'category'));
+  renderBarChart('spendItemChart', bucketRows(items, ITEMS, 'item'));
 
   const personEl = document.getElementById('spendPersonChart');
   if (personEl) {
@@ -128,9 +136,10 @@ function renderSpendingTab() {
     const m = memberById(e.memberId);
     const li = document.createElement('li');
     li.className = 'task-item';
+    const titleParts = [e.category, e.item].filter(Boolean).join(' — ');
     li.innerHTML = `
       <div class="task-main">
-        <div class="task-title">${escapeHtml(e.category)}${e.note ? ' — ' + escapeHtml(e.note) : ''}</div>
+        <div class="task-title">${escapeHtml(titleParts)}${e.note ? ' — ' + escapeHtml(e.note) : ''}</div>
         <div class="task-meta">
           <span class="due-badge due-upcoming">${fmtDateNice(e.date)}</span>
           ${m ? `<span class="chip" style="--mc:${m.color}"><span class="dot">${initials(m.name)}</span>${escapeHtml(m.name)}</span>` : ''}
@@ -159,13 +168,14 @@ export function initSpending() {
   document.getElementById('nextSpendMonth').addEventListener('click', goNextSpendMonth);
 
   document.getElementById('addExpenseBtn').addEventListener('click', () => {
-    const category = document.getElementById('expenseCategory').value;
-    const amount = parseFloat(document.getElementById('expenseAmount').value);
     const date = document.getElementById('expenseDate').value || todayStr();
+    const category = document.getElementById('expenseCategory').value;
+    const item = document.getElementById('expenseItem').value;
+    const amount = parseFloat(document.getElementById('expenseAmount').value);
     const memberId = document.getElementById('expenseMember').value;
     const note = document.getElementById('expenseNote').value.trim();
     if (!category || isNaN(amount)) return;
-    addItem('expenses', { category, amount, date, memberId, note, createdAt: serverTimestamp() });
+    addItem('expenses', { category, item, amount, date, memberId, note, createdAt: serverTimestamp() });
     document.getElementById('expenseAmount').value = '';
     document.getElementById('expenseDate').value = '';
     document.getElementById('expenseNote').value = '';

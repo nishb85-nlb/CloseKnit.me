@@ -319,13 +319,24 @@
       <h2>Log spending</h2>
       <div class="row">
         <div class="field">
+          <label>Date</label>
+          <input type="date" id="expenseDate">
+        </div>
+        <div class="field">
           <label>Category</label>
           <select id="expenseCategory">
-            <option>Grocery</option>
             <option>Household</option>
-            <option>Entertainment</option>
             <option>Hazel</option>
             <option>Rolo</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Item</label>
+          <select id="expenseItem">
+            <option>Grocery</option>
+            <option>Household Bill</option>
+            <option>Entertainment</option>
             <option>Other</option>
           </select>
         </div>
@@ -334,15 +345,11 @@
           <input type="number" id="expenseAmount" step="0.01" min="0" placeholder="0.00">
         </div>
         <div class="field">
-          <label>Date</label>
-          <input type="date" id="expenseDate">
-        </div>
-        <div class="field">
           <label>Paid by <small style="font-weight:400;">(optional — leave as Shared if split)</small></label>
           <select id="expenseMember"></select>
         </div>
         <div class="field" style="flex:1; min-width:160px;">
-          <label>Note <small style="font-weight:400;">(optional)</small></label>
+          <label>Notes <small style="font-weight:400;">(optional)</small></label>
           <input type="text" id="expenseNote" placeholder="e.g. Big weekly shop">
         </div>
         <div class="field" style="align-self:flex-end;">
@@ -361,7 +368,12 @@
         <h2 style="margin:0;">Spending by category</h2>
         <span class="spend-total" id="spendMonthTotal">&pound;0.00</span>
       </div>
-      <div id="spendChart"></div>
+      <div id="spendCategoryChart"></div>
+    </div>
+
+    <div class="card">
+      <h2>Spending by item</h2>
+      <div id="spendItemChart"></div>
     </div>
 
     <div class="card">
