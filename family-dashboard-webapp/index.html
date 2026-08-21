@@ -324,6 +324,8 @@
             <option>Grocery</option>
             <option>Household</option>
             <option>Entertainment</option>
+            <option>Hazel</option>
+            <option>Rolo</option>
             <option>Other</option>
           </select>
         </div>
@@ -336,7 +338,7 @@
           <input type="date" id="expenseDate">
         </div>
         <div class="field">
-          <label>Who's it for <small style="font-weight:400;">(optional — leave as Shared for general household spend)</small></label>
+          <label>Paid by <small style="font-weight:400;">(optional — leave as Shared if split)</small></label>
           <select id="expenseMember"></select>
         </div>
         <div class="field" style="flex:1; min-width:160px;">
@@ -368,7 +370,7 @@
     </div>
 
     <div class="card">
-      <h2>Spending by person <small>what was spent on who this month</small></h2>
+      <h2>Spending by person <small>who paid this month</small></h2>
       <div id="spendPersonChart"></div>
     </div>
   </section>

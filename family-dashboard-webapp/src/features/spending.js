@@ -6,12 +6,17 @@ import { escapeHtml, initials, fmtMoney } from "../utils/format.js";
 
 // Categorical colours validated with the dataviz skill's six-check palette
 // validator (fixed hue order — never cycled). "Other" is deliberately a
-// de-emphasis neutral, not a fourth validated hue, matching the "fold the
-// tail into Other" guidance for a small fixed category set.
+// de-emphasis neutral, not a validated hue, matching the "fold the tail
+// into Other" guidance for a small fixed category set. Hazel/Rolo sit
+// alongside the spend-type categories rather than under the separate
+// "Paid by" field, since spend "on" a specific person/pet is its own
+// category here, distinct from who paid for it.
 const CATEGORIES = [
   { key: 'Grocery', color: '#2a9d8f' },
   { key: 'Household', color: '#4361ee' },
   { key: 'Entertainment', color: '#d6336c' },
+  { key: 'Hazel', color: '#f3722c' },
+  { key: 'Rolo', color: '#7209b7' },
   { key: 'Other', color: '#9aa4b2' },
 ];
 
@@ -34,11 +39,12 @@ function categoryRows(items) {
   return CATEGORIES.map(c => ({ label: c.key, amount: totals[c.key] || 0, color: c.color }));
 }
 
-// Who spent what this month, using each member's own existing colour
-// (already used for their avatar/chips elsewhere) so the person and the
-// bar are visually the same thing everywhere in the app. Unlike categories
-// this genuinely is a magnitude ranking ("who spent the most"), so it's
-// sorted descending rather than held to a fixed order.
+// Who paid this month (the expenseMember field is "Paid by"), using each
+// member's own existing colour (already used for their avatar/chips
+// elsewhere) so the person and the bar are visually the same thing
+// everywhere in the app. Unlike categories this genuinely is a magnitude
+// ranking ("who paid the most"), so it's sorted descending rather than
+// held to a fixed order.
 function personRows(items) {
   const totals = {};
   let sharedAmount = 0;
