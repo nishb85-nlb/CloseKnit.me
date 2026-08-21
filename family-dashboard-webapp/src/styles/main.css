@@ -68,6 +68,35 @@ header .sub{
   color:rgba(255,255,255,0.85);
   font-size:0.85rem;
   margin-top:2px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.weather-inline{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.weather-inline:not(:empty)::before{
+  content:'·';
+  opacity:0.6;
+}
+.weather-inline .weather-icon{font-size:0.95rem;}
+.weather-inline .weather-temp{font-weight:700;}
+.weather-inline .weather-range{color:rgba(255,255,255,0.7); font-size:0.78rem;}
+.weather-inline .weather-place{color:rgba(255,255,255,0.7); font-size:0.78rem;}
+.weather-inline .weather-loading{color:rgba(255,255,255,0.6); font-size:0.78rem;}
+.weather-retry{
+  background:none;
+  border:none;
+  color:rgba(255,255,255,0.85);
+  font-size:0.78rem;
+  font-weight:600;
+  cursor:pointer;
+  padding:0;
+  text-decoration:underline;
+  text-underline-offset:2px;
 }
 .header-actions{
   display:flex;

@@ -28,6 +28,19 @@ Nothing else needs registering — Google's OAuth consent screen still only
 knows about Supabase's own fixed callback URL, which you already set up per
 `MIGRATION.md`.
 
+## Weather widget location permission
+
+The header's weather chip uses the browser's `navigator.geolocation` API,
+which works out of the box on the web. `ACCESS_COARSE_LOCATION` /
+`ACCESS_FINE_LOCATION` are declared in `AndroidManifest.xml` so the WebView
+*can* request device location too — but this is untested on an actual device
+(no Android Studio/emulator available in this environment to verify the
+runtime permission prompt actually surfaces). If it doesn't work first time
+on-device, the fix is normally adding the official
+[`@capacitor/geolocation`](https://capacitorjs.com/docs/apis/geolocation)
+plugin, which bridges the native permission dialog properly instead of
+relying on the WebView's default handling.
+
 ## Building and running
 
 You'll need [Android Studio](https://developer.android.com/studio) (includes the SDK).

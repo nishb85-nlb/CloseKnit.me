@@ -4,6 +4,7 @@ import { resetState } from "../state/store.js";
 import { session } from "../state/session.js";
 import { ALLOWED_EMAILS, FINANCE_EMAILS } from "../config/env.js";
 import { goToTab } from "./tabs.js";
+import { renderWeather } from "./weather.js";
 
 export function initAuthUI() {
   const authOverlay = document.getElementById('authOverlay');
@@ -63,6 +64,7 @@ export function initAuthUI() {
         if (financeView && financeView.classList.contains('active')) goToTab('overview');
       }
       startSync();
+      renderWeather();
     } else {
       authOverlay.style.display = 'flex';
       appRoot.style.display = 'none';
