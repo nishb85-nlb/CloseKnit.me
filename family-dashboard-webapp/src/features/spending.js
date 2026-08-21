@@ -52,6 +52,12 @@ function bucketRows(items, buckets, field) {
 // everywhere in the app. Unlike categories this genuinely is a magnitude
 // ranking ("who paid the most"), so it's sorted descending rather than
 // held to a fixed order.
+// Hazel and Rolo are never the one paying (Nish/Sangi pay for everything in
+// this household) — they'd only ever show up here as a permanent £0.00 bar,
+// so they're excluded from this specific chart even though they're regular
+// family members everywhere else (Paid by dropdown included).
+const NEVER_PAYERS = new Set(['Hazel', 'Rolo']);
+
 function personRows(items) {
   const totals = {};
   let sharedAmount = 0;
@@ -59,7 +65,9 @@ function personRows(items) {
     if (e.memberId) totals[e.memberId] = (totals[e.memberId] || 0) + (Number(e.amount) || 0);
     else sharedAmount += Number(e.amount) || 0;
   });
-  const rows = state.members.map(m => ({ label: m.name, amount: totals[m.id] || 0, color: m.color }));
+  const rows = state.members
+    .filter(m => !NEVER_PAYERS.has(m.name))
+    .map(m => ({ label: m.name, amount: totals[m.id] || 0, color: m.color }));
   if (sharedAmount > 0) rows.push({ label: 'Shared', amount: sharedAmount, color: '#9aa4b2' });
   return rows.sort((a, b) => b.amount - a.amount);
 }
