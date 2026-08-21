@@ -22,6 +22,8 @@ const ITEMS = [
   { key: 'Grocery', color: '#2a9d8f' },
   { key: 'Household Bill', color: '#4361ee' },
   { key: 'Entertainment', color: '#d6336c' },
+  { key: 'Travel', color: '#c9971b' },
+  { key: 'School', color: '#7209b7' },
   { key: 'Other', color: '#9aa4b2' },
 ];
 

@@ -443,7 +443,7 @@ main{
 .field{display:flex; flex-direction:column; gap:4px; width:150px;}
 .field:has(> button){width:auto;}
 .field label{font-size:0.75rem; color:var(--ink-soft); font-weight:600;}
-input[type=text], input[type=date], input[type=time], select, textarea{
+input[type=text], input[type=date], input[type=time], input[type=number], input[type=url], select, textarea{
   border:1px solid var(--line);
   border-radius:7px;
   padding:8px 10px;
