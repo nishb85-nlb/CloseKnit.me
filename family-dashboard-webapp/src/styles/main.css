@@ -436,7 +436,12 @@ main{
 }
 
 .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
-.field{display:flex; flex-direction:column; gap:4px;}
+/* Every form field is the same width by default, everywhere in the app —
+   fields meant to grow (notes, destinations, free-text) opt out with their
+   own inline flex:1, which overrides this. Fields that just wrap a submit/
+   cancel button stay their natural (auto) width instead. */
+.field{display:flex; flex-direction:column; gap:4px; width:150px;}
+.field:has(> button){width:auto;}
 .field label{font-size:0.75rem; color:var(--ink-soft); font-weight:600;}
 input[type=text], input[type=date], input[type=time], select, textarea{
   border:1px solid var(--line);
