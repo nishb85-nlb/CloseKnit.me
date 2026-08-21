@@ -34,6 +34,36 @@ function monthKeyOf(dateStr) {
   return dateStr ? dateStr.slice(0, 7) : '';
 }
 
+function daysInMonth(year, month) {
+  return new Date(year, month + 1, 0).getDate();
+}
+
+// Standard bills recur indefinitely from their first date, same day-of-month
+// each time (clamped for shorter months — the 31st becomes the 28th/30th)
+// — no separate "until" date, since a recurring bill just continues until
+// deleted. Like calendar.js's recurring events, this is a *virtual*
+// occurrence computed for whichever month is being viewed, not a duplicated
+// row, so there's still exactly one real record (and one id) per bill.
+function recurringOccurrenceIn(e, year, month) {
+  const start = new Date(e.date + 'T00:00:00');
+  const startKey = start.getFullYear() * 12 + start.getMonth();
+  const targetKey = year * 12 + month;
+  if (targetKey < startKey) return null; // hasn't started yet
+  const day = Math.min(start.getDate(), daysInMonth(year, month));
+  const occDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  return { ...e, date: occDate };
+}
+
+function itemsForMonth(year, month) {
+  const monthKey = year + '-' + String(month + 1).padStart(2, '0');
+  const oneOff = state.expenses.filter(e => !e.recurring && monthKeyOf(e.date) === monthKey);
+  const recurring = state.expenses
+    .filter(e => e.recurring)
+    .map(e => recurringOccurrenceIn(e, year, month))
+    .filter(Boolean);
+  return [...oneOff, ...recurring];
+}
+
 // Fixed order every time for both — this is identity (which bucket), not a
 // ranking, so it stays put rather than reshuffling as amounts change.
 function bucketRows(items, buckets, field) {
@@ -99,8 +129,8 @@ function renderOverviewCard() {
   card.style.display = show ? '' : 'none';
   if (!show) return;
 
-  const monthKey = todayStr().slice(0, 7);
-  const items = state.expenses.filter(e => monthKeyOf(e.date) === monthKey);
+  const today = new Date();
+  const items = itemsForMonth(today.getFullYear(), today.getMonth());
   const total = items.reduce((s, e) => s + (Number(e.amount) || 0), 0);
 
   const totalEl = document.getElementById('overviewSpendTotal');
@@ -115,8 +145,7 @@ function renderSpendingTab() {
   const monthLabelEl = document.getElementById('spendMonthLabel');
   if (monthLabelEl) monthLabelEl.textContent = spendCursor.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 
-  const monthKey = spendCursor.getFullYear() + '-' + String(spendCursor.getMonth() + 1).padStart(2, '0');
-  const items = state.expenses.filter(e => monthKeyOf(e.date) === monthKey);
+  const items = itemsForMonth(spendCursor.getFullYear(), spendCursor.getMonth());
   const total = items.reduce((s, e) => s + (Number(e.amount) || 0), 0);
 
   const totalEl = document.getElementById('spendMonthTotal');
@@ -147,11 +176,13 @@ function renderSpendingTab() {
     const li = document.createElement('li');
     li.className = 'task-item';
     const titleParts = [e.category, e.item].filter(Boolean).join(' — ');
+    const recurringBadge = e.recurring ? '<span class="due-badge due-upcoming" title="Repeats every month">↻ Monthly</span>' : '';
     li.innerHTML = `
       <div class="task-main">
         <div class="task-title">${escapeHtml(titleParts)}${e.note ? ' — ' + escapeHtml(e.note) : ''}</div>
         <div class="task-meta">
           <span class="due-badge due-upcoming">${fmtDateNice(e.date)}</span>
+          ${recurringBadge}
           ${m ? `<span class="chip" style="--mc:${m.color}"><span class="dot">${initials(m.name)}</span>${escapeHtml(m.name)}</span>` : ''}
         </div>
       </div>
@@ -159,6 +190,7 @@ function renderSpendingTab() {
       <button class="btn small danger" title="Delete">✕</button>
     `;
     li.querySelector('button.danger').addEventListener('click', () => {
+      if (e.recurring && !confirm('This bill repeats monthly. Delete the whole series?')) return;
       deleteItem('expenses', e.id);
     });
     listEl.appendChild(li);
@@ -184,10 +216,12 @@ export function initSpending() {
     const amount = parseFloat(document.getElementById('expenseAmount').value);
     const memberId = document.getElementById('expenseMember').value;
     const note = document.getElementById('expenseNote').value.trim();
+    const recurring = document.getElementById('expenseRecurring').checked;
     if (!category || isNaN(amount)) return;
-    addItem('expenses', { category, item, amount, date, memberId, note, createdAt: serverTimestamp() });
+    addItem('expenses', { category, item, amount, date, memberId, note, recurring, createdAt: serverTimestamp() });
     document.getElementById('expenseAmount').value = '';
     document.getElementById('expenseDate').value = '';
     document.getElementById('expenseNote').value = '';
+    document.getElementById('expenseRecurring').checked = false;
   });
 }

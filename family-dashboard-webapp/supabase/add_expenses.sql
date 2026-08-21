@@ -13,6 +13,7 @@ create table expenses (
   date date not null,
   member_id text references members(id) on delete set null,
   note text,
+  recurring boolean not null default false,
   created_at timestamptz not null default now()
 );
 
