@@ -38,7 +38,7 @@
 
 <header>
   <div>
-    <h1><img class="logo-img" src="/logo.png" alt="Close Knit"></h1>
+    <h1 id="headerLogoWrap"><img class="logo-img" src="/logo.png" alt="Close Knit"></h1>
     <div class="sub">
       <span id="todayLabel"></span>
       <span class="weather-inline" id="weatherInline"></span>
@@ -59,6 +59,7 @@
 <div class="app-body">
 
 <nav class="tabs">
+  <div class="sidebar-logo" id="sidebarLogoWrap"><img class="logo-img" src="/logo.png" alt="Close Knit"></div>
   <button data-view="overview" class="active tab-primary"><span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 5l8 6.5"/><path d="M6 10v9a1 1 0 0 0 1 1h4v-5h2v5h4a1 1 0 0 0 1-1v-9"/></svg></span><span class="tab-label">Overview</span></button>
   <button data-view="calendar" class="tab-primary"><span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5.5" width="16" height="15" rx="2.5"/><path d="M4 10h16M8 3.5v3M16 3.5v3"/></svg></span><span class="tab-label">Calendar</span></button>
   <button data-view="tasks" class="tab-primary"><span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 6.5h9M9.5 12h9M9.5 17.5h9"/><path d="m4.5 6.5 1 1 2-2M4.5 12l1 1 2-2M4.5 17.5l1 1 2-2"/></svg></span><span class="tab-label">Tasks</span></button>

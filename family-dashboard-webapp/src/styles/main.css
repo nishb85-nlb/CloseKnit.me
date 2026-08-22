@@ -22,6 +22,11 @@
   --c-holiday:#f3722c;
   --c-wishlist:#d6336c;
   --c-spending:#a0522d;
+  /* Desktop sidebar — dark navy, complementing the header's blue/purple
+     gradient rather than a literal copy of any reference palette. */
+  --sidebar-bg:#141a2e;
+  --sidebar-text:rgba(255,255,255,0.68);
+  --sidebar-hover:rgba(255,255,255,0.08);
 }
 *{box-sizing:border-box;}
 body{
@@ -63,6 +68,18 @@ header h1{
    silhouette there instead of its native navy/teal, so it stays legible.
    The sign-in card keeps the logo's original colours (white background). */
 header .logo-img{
+  filter:brightness(0) invert(1);
+}
+/* Duplicate logo, shown in the sidebar instead of the header on desktop/
+   tablet (Yardao-style layout) — see the >=768px block below for the
+   header/sidebar swap. Same white-silhouette treatment, since the sidebar
+   is dark there too. */
+.sidebar-logo{
+  display:none;
+  padding:4px 14px 18px;
+}
+.sidebar-logo .logo-img{
+  height:40px;
   filter:brightness(0) invert(1);
 }
 header .sub{
@@ -333,9 +350,14 @@ main{
     gap:2px;
     padding:20px 12px;
     border-top:none;
-    border-right:1px solid var(--line);
+    border-right:none;
     box-shadow:none;
+    background:var(--sidebar-bg);
   }
+  /* Logo lives at the top of the sidebar on desktop instead of the header
+     (mobile keeps it in the header — the bottom tab bar has no room for it). */
+  #headerLogoWrap{display:none;}
+  .sidebar-logo{display:block;}
   nav.tabs button.tab-secondary{display:flex;}
   nav.tabs button.tab-more{display:none;}
   nav.tabs button{
@@ -348,12 +370,14 @@ main{
     font-weight:500;
     border-radius:8px;
     border-left:3px solid transparent;
+    color:var(--sidebar-text);
   }
+  nav.tabs button:hover{background:var(--sidebar-hover);}
   nav.tabs .tab-icon{font-size:1.05rem; opacity:0.85;}
   nav.tabs button.active{
     font-weight:600;
     border-left-color:currentColor;
-    background:color-mix(in srgb, currentColor 8%, transparent);
+    background:color-mix(in srgb, currentColor 18%, transparent);
   }
   nav.tabs button.active .tab-icon{opacity:1;}
   main{
