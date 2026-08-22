@@ -582,6 +582,26 @@ select.filter{max-width:180px;}
 
 .spend-card-head{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:14px;}
 .spend-total{font-size:1.1rem; font-weight:700; color:var(--ink);}
+.spend-collapse-toggle{
+  background:none;
+  border:none;
+  padding:0;
+  margin:0 0 14px;
+  font:inherit;
+  color:inherit;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  width:100%;
+  gap:10px;
+  cursor:pointer;
+  text-align:left;
+}
+.spend-chevron{display:inline-flex; width:18px; height:18px; color:var(--ink-soft); flex-shrink:0;}
+.spend-chevron svg{width:100%; height:100%;}
+.spend-chevron-right{display:none;}
+.spend-collapse-toggle[aria-expanded="false"] .spend-chevron-down{display:none;}
+.spend-collapse-toggle[aria-expanded="false"] .spend-chevron-right{display:block;}
 .spend-bar-row{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
 .spend-bar-row:last-child{margin-bottom:0;}
 .spend-bar-label{width:100px; flex-shrink:0; font-size:0.82rem; color:var(--ink-soft); font-weight:600;}

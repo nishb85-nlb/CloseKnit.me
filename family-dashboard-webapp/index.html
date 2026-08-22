@@ -79,16 +79,32 @@
     <div class="grid" id="statGrid"></div>
 
     <div class="card" id="overviewSpendCard" style="display:none;">
-      <div class="spend-card-head">
+      <button type="button" class="spend-collapse-toggle" data-collapse="overviewSpendBody" aria-expanded="true">
         <h2 style="margin:0;">This month's spending</h2>
-        <span class="spend-total" id="overviewSpendTotal">&pound;0.00</span>
+        <span style="display:flex; align-items:center; gap:8px;">
+          <span class="spend-total" id="overviewSpendTotal">&pound;0.00</span>
+          <span class="spend-chevron">
+            <svg class="spend-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            <svg class="spend-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+          </span>
+        </span>
+      </button>
+      <div id="overviewSpendBody">
+        <div id="overviewSpendChart"></div>
       </div>
-      <div id="overviewSpendChart"></div>
     </div>
 
     <div class="card" id="overviewSpendPersonCard" style="display:none;">
-      <h2>Spending by person <small>who paid this month</small></h2>
-      <div id="overviewSpendPersonChart"></div>
+      <button type="button" class="spend-collapse-toggle" data-collapse="overviewSpendPersonBody" aria-expanded="true">
+        <h2 style="margin:0;">Spending by person <small style="font-weight:400;">who paid this month</small></h2>
+        <span class="spend-chevron">
+          <svg class="spend-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          <svg class="spend-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+        </span>
+      </button>
+      <div id="overviewSpendPersonBody">
+        <div id="overviewSpendPersonChart"></div>
+      </div>
     </div>
 
     <div class="card">

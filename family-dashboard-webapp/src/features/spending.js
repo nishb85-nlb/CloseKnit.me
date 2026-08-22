@@ -232,6 +232,21 @@ export function initSpending() {
   document.getElementById('prevSpendMonth').addEventListener('click', goPrevSpendMonth);
   document.getElementById('nextSpendMonth').addEventListener('click', goNextSpendMonth);
 
+  // Collapsible dashboard cards (Overview's "This month's spending" and
+  // "Spending by person") — the toggle button and its target body are both
+  // static HTML, untouched by renderBarChart()'s innerHTML writes into the
+  // chart div nested inside, so the expanded/collapsed state survives
+  // every re-render.
+  document.querySelectorAll('.spend-collapse-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const body = document.getElementById(btn.dataset.collapse);
+      if (!body) return;
+      const expanded = btn.getAttribute('aria-expanded') !== 'false';
+      btn.setAttribute('aria-expanded', String(!expanded));
+      body.style.display = expanded ? 'none' : '';
+    });
+  });
+
   document.getElementById('addExpenseBtn').addEventListener('click', () => {
     const date = document.getElementById('expenseDate').value || todayStr();
     const category = document.getElementById('expenseCategory').value;
