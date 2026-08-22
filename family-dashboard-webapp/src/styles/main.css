@@ -24,7 +24,7 @@
   --c-spending:#a0522d;
   /* Desktop sidebar — dark navy, complementing the header's blue/purple
      gradient rather than a literal copy of any reference palette. */
-  --sidebar-bg:#141a2e;
+  --sidebar-bg:#241a2e;
   --sidebar-text:rgba(255,255,255,0.68);
   --sidebar-hover:rgba(255,255,255,0.08);
 }
@@ -168,7 +168,7 @@ header .btn:hover{background:rgba(255,255,255,0.28);}
 /* ---- Sign-in overlay ---- */
 .auth-overlay{
   position:fixed; inset:0;
-  background:linear-gradient(160deg, #141a2e, #1c2440 85%);
+  background:linear-gradient(160deg, #241a2e, #2c2040 85%);
   display:flex; align-items:center; justify-content:center;
   z-index:100;
   padding:20px;
