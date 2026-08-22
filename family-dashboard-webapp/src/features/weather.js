@@ -46,7 +46,7 @@ function getLocation() {
     navigator.geolocation.getCurrentPosition(
       pos => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
       err => reject(err),
-      { timeout: 10000, maximumAge: CACHE_MS }
+      { timeout: 10000, maximumAge: 0, enableHighAccuracy: true }
     );
   });
 }
