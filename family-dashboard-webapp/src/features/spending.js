@@ -155,6 +155,13 @@ function renderOverviewCard() {
   // The dashboard glance leads with Category (who/what it's for) since
   // that's the dimension this household cares about seeing at a glance.
   renderBarChart('overviewSpendChart', bucketRows(items, CATEGORIES, 'category'));
+
+  const personCard = document.getElementById('overviewSpendPersonCard');
+  if (personCard) {
+    const rows = personRows(items);
+    personCard.style.display = rows.length ? '' : 'none';
+    if (rows.length) renderBarChart('overviewSpendPersonChart', rows);
+  }
 }
 
 function renderSpendingTab() {
