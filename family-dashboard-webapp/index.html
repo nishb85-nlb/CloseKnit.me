@@ -340,88 +340,121 @@
   <!-- SPENDING -->
   <section class="view" id="view-spending">
     <div class="card">
-      <h2>Log spending</h2>
-      <div class="row">
-        <div class="field">
-          <label>Date</label>
-          <input type="date" id="expenseDate">
-        </div>
-        <div class="field">
-          <label>Category</label>
-          <select id="expenseCategory">
-            <option>Household</option>
-            <option>Hazel</option>
-            <option>Rolo</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Item</label>
-          <select id="expenseItem">
-            <option>Grocery</option>
-            <option>Household Bill</option>
-            <option>TV License</option>
-            <option>Entertainment</option>
-            <option>Travel</option>
-            <option>School</option>
-            <option>Clubs</option>
-            <option>Renovation</option>
-            <option>House Cleaner</option>
-            <option>Window Cleaner</option>
-            <option>Pet Sitter</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Amount (&pound;)</label>
-          <input type="number" id="expenseAmount" step="0.01" min="0" placeholder="0.00">
-        </div>
-        <div class="field">
-          <label>Paid by <small style="font-weight:400;">(optional — leave as Shared if split)</small></label>
-          <select id="expenseMember"></select>
-        </div>
-        <div class="field" style="flex:1; min-width:160px;">
-          <label>Notes <small style="font-weight:400;">(optional)</small></label>
-          <input type="text" id="expenseNote" placeholder="e.g. Big weekly shop">
-        </div>
-        <div class="field" style="align-self:flex-end;">
-          <label style="display:flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap;">
-            <input type="checkbox" id="expenseRecurring" style="width:auto; accent-color:var(--accent); cursor:pointer;">
-            Repeats monthly
-          </label>
-        </div>
-        <div class="field" style="align-self:flex-end;">
-          <button class="btn primary" id="addExpenseBtn">Add</button>
+      <button type="button" class="spend-collapse-toggle" data-collapse="logSpendingBody" aria-expanded="true">
+        <h2 style="margin:0;">Log spending</h2>
+        <span class="spend-chevron">
+          <svg class="spend-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          <svg class="spend-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+        </span>
+      </button>
+      <div id="logSpendingBody">
+        <div class="row">
+          <div class="field">
+            <label>Date</label>
+            <input type="date" id="expenseDate">
+          </div>
+          <div class="field">
+            <label>Category</label>
+            <select id="expenseCategory">
+              <option>Household</option>
+              <option>Hazel</option>
+              <option>Rolo</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Item</label>
+            <select id="expenseItem">
+              <option>Grocery</option>
+              <option>Household Bill</option>
+              <option>TV License</option>
+              <option>Entertainment</option>
+              <option>Travel</option>
+              <option>School</option>
+              <option>Clubs</option>
+              <option>Renovation</option>
+              <option>House Cleaner</option>
+              <option>Window Cleaner</option>
+              <option>Pet Sitter</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Amount (&pound;)</label>
+            <input type="number" id="expenseAmount" step="0.01" min="0" placeholder="0.00">
+          </div>
+          <div class="field">
+            <label>Paid by <small style="font-weight:400;">(optional — leave as Shared if split)</small></label>
+            <select id="expenseMember"></select>
+          </div>
+          <div class="field" style="flex:1; min-width:160px;">
+            <label>Notes <small style="font-weight:400;">(optional)</small></label>
+            <input type="text" id="expenseNote" placeholder="e.g. Big weekly shop">
+          </div>
+          <div class="field" style="align-self:flex-end;">
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap;">
+              <input type="checkbox" id="expenseRecurring" style="width:auto; accent-color:var(--accent); cursor:pointer;">
+              Repeats monthly
+            </label>
+          </div>
+          <div class="field" style="align-self:flex-end;">
+            <button class="btn primary" id="addExpenseBtn">Add</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="cal-head">
-        <button class="btn small" id="prevSpendMonth">&larr;</button>
-        <div class="month-label" id="spendMonthLabel"></div>
-        <button class="btn small" id="nextSpendMonth">&rarr;</button>
-      </div>
-      <div class="spend-card-head">
-        <h2 style="margin:0;">Spending by category</h2>
-        <span class="spend-total" id="spendMonthTotal">&pound;0.00</span>
-      </div>
-      <div id="spendCategoryChart"></div>
+    <div class="cal-head">
+      <button class="btn small" id="prevSpendMonth">&larr;</button>
+      <div class="month-label" id="spendMonthLabel"></div>
+      <button class="btn small" id="nextSpendMonth">&rarr;</button>
     </div>
 
     <div class="card">
-      <h2>Spending by item</h2>
-      <div id="spendItemChart"></div>
+      <button type="button" class="spend-collapse-toggle" data-collapse="spendPersonBody" aria-expanded="true">
+        <h2 style="margin:0;">Spending by person <small style="font-weight:400;">who paid this month</small></h2>
+        <span class="spend-chevron">
+          <svg class="spend-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          <svg class="spend-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+        </span>
+      </button>
+      <div id="spendPersonBody">
+        <div id="spendPersonChart"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <button type="button" class="spend-collapse-toggle" data-collapse="spendCategoryBody" aria-expanded="true">
+        <span class="spend-card-head" style="margin-bottom:0;">
+          <h2 style="margin:0;">Spending by category</h2>
+          <span class="spend-total" id="spendMonthTotal">&pound;0.00</span>
+        </span>
+        <span class="spend-chevron">
+          <svg class="spend-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          <svg class="spend-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+        </span>
+      </button>
+      <div id="spendCategoryBody">
+        <div id="spendCategoryChart"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <button type="button" class="spend-collapse-toggle" data-collapse="spendItemBody" aria-expanded="true">
+        <h2 style="margin:0;">Spending by item</h2>
+        <span class="spend-chevron">
+          <svg class="spend-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          <svg class="spend-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+        </span>
+      </button>
+      <div id="spendItemBody">
+        <div id="spendItemChart"></div>
+      </div>
     </div>
 
     <div class="card">
       <h2>This month's spending</h2>
       <ul class="task-list" id="spendList"></ul>
-    </div>
-
-    <div class="card">
-      <h2>Spending by person <small>who paid this month</small></h2>
-      <div id="spendPersonChart"></div>
     </div>
   </section>
 
