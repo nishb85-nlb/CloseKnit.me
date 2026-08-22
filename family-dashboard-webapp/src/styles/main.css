@@ -266,6 +266,12 @@ nav.tabs{
   border-top:1px solid var(--line);
   box-shadow:0 -2px 14px rgba(20,20,30,0.08);
 }
+/* On mobile this wrapper is invisible to layout — its buttons act as direct
+   flex children of nav.tabs, same as before it existed. On desktop it
+   becomes the sticky, independently-scrollable content column, while
+   nav.tabs itself (see >=768px block) stretches the full page height so
+   its dark background never stops short of the page's actual content. */
+.sidebar-inner{display:contents;}
 nav.tabs button{
   flex:1;
   display:flex;
@@ -333,11 +339,10 @@ main{
 @media (min-width:768px){
   .app-body{
     flex-direction:row;
-    align-items:flex-start;
+    align-items:stretch;
   }
   nav.tabs{
-    position:sticky;
-    top:0;
+    position:static;
     left:auto;
     right:auto;
     bottom:auto;
@@ -345,14 +350,24 @@ main{
     align-items:stretch;
     width:220px;
     flex-shrink:0;
-    max-height:100vh;
-    overflow-y:auto;
-    gap:2px;
-    padding:20px 12px;
     border-top:none;
     border-right:none;
     box-shadow:none;
     background:var(--sidebar-bg);
+  }
+  /* The part that actually scrolls/sticks is this inner column, kept
+     separate from nav.tabs so the dark background (on the stretched outer
+     element) always reaches the bottom of the page regardless of how much
+     shorter the nav's own content is than main's. */
+  .sidebar-inner{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    padding:20px 12px;
+    position:sticky;
+    top:0;
+    max-height:100vh;
+    overflow-y:auto;
   }
   /* Logo lives at the top of the sidebar on desktop instead of the header
      (mobile keeps it in the header — the bottom tab bar has no room for it). */
