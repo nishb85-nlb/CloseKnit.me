@@ -453,8 +453,16 @@
     </div>
 
     <div class="card">
-      <h2>This month's spending</h2>
-      <ul class="task-list" id="spendList"></ul>
+      <button type="button" class="spend-collapse-toggle" data-collapse="spendListBody" aria-expanded="true">
+        <h2 style="margin:0;">This month's spending</h2>
+        <span class="spend-chevron">
+          <svg class="spend-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          <svg class="spend-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+        </span>
+      </button>
+      <div id="spendListBody">
+        <ul class="task-list" id="spendList"></ul>
+      </div>
     </div>
   </section>
 
