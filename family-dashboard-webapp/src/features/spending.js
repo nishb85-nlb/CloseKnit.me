@@ -37,6 +37,7 @@ const ITEM_TO_BUCKET = {
   'Window Cleaner': 'Services',
   'Pet Sitter': 'Services',
   'Dog Groomer': 'Services',
+  'Vets': 'Services',
   'TV License': 'Household Bill',
   'Clubs': 'School',
 };
